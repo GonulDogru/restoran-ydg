@@ -72,7 +72,7 @@ pipeline {
           echo "Post cleanup skipped: ${e}"
         }
       }
-      archiveArtifacts artifacts: 'target/site/jacoco/**', allowEmptyArchive: true
+
     }
   }
 
