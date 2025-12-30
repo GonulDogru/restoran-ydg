@@ -1,0 +1,26 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/rezervasyon/update/{id}(id=${rezervasyon.id})}" method="post">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID:</label>
+            <input type="text" id="id" name="id" th:value="${rezervasyon.id}" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="tarih" class="form-label">Tarih:</label>
+            <input type="date" id="tarih" name="tarih" th:value="${rezervasyon.tarih}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="saat" class="form-label">Saat:</label>
+            <input type="time" id="saat" name="saat" th:value="${rezervasyon.saat}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="userId" class="form-label">User ID:</label>
+            <input type="number" id="userId" name="userId" th:value="${rezervasyon.userId}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="masaId" class="form-label">Masa ID:</label>
+            <input type="number" id="masaId" name="masaId" th:value="${rezervasyon.masaId}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a th:href="@{/rezervasyon/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

@@ -1,0 +1,14 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/restaurant/save}" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Restaurant Adı:</label>
+            <input type="text" id="name" name="name" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Adres:</label>
+            <input type="text" id="address" name="address" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a th:href="@{/restaurant/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

@@ -1,0 +1,22 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/odeme/update/{id}(id=${odeme.id})}" method="post">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID:</label>
+            <input type="text" id="id" name="id" th:value="${odeme.id}" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="tarih" class="form-label">Tarih:</label>
+            <input type="date" id="tarih" name="tarih" th:value="${odeme.tarih}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="amount" class="form-label">Tutar:</label>
+            <input type="number" id="amount" step="0.01" name="amount" th:value="${odeme.amount}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="siparisId" class="form-label">Sipariş ID:</label>
+            <input type="number" id="siparisId" name="siparisId" th:value="${odeme.siparisId}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a th:href="@{/odeme/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

@@ -1,0 +1,22 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/iletisim/update/{id}(id=${iletisim.id})}" method="post">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID:</label>
+            <input type="text" id="id" name="id" th:value="${iletisim.id}" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="mesaj" class="form-label">Mesaj:</label>
+            <textarea id="mesaj" name="mesaj" class="form-control" th:text="${iletisim.mesaj}"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="userId" class="form-label">User ID:</label>
+            <input type="number" id="userId" name="userId" th:value="${iletisim.userId}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="restaurantId" class="form-label">Restaurant ID:</label>
+            <input type="number" id="restaurantId" name="restaurantId" th:value="${iletisim.restaurantId}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a th:href="@{/iletisim/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

@@ -1,0 +1,14 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/calisan/save}" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Çalışan Ad:</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="restaurantId" class="form-label">Restoran ID:</label>
+            <input type="number" id="restaurantId" name="restaurantId" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a th:href="@{/calisan/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

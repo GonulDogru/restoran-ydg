@@ -1,0 +1,18 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/indirim/update/{id}(id=${indirim.id})}" method="post">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID:</label>
+            <input type="text" id="id" name="id" th:value="${indirim.id}" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="amount" class="form-label">Tutar:</label>
+            <input type="number" id="amount" name="amount" th:value="${indirim.amount}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="kullaniciId" class="form-label">Kullanıcı ID:</label>
+            <input type="number" id="kullaniciId" name="kullaniciId" th:value="${indirim.kullaniciId}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a th:href="@{/indirim/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

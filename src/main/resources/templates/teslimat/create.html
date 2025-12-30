@@ -1,0 +1,22 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/teslimat/save}" method="post">
+        <div class="mb-3">
+            <label for="address" class="form-label">Adres:</label>
+            <input type="text" id="address" name="address" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="durum" class="form-label">Durum:</label>
+            <input type="text" id="durum" name="durum" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="restaurantId" class="form-label">Restaurant ID:</label>
+            <input type="number" id="restaurantId" name="restaurantId" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="siparisId" class="form-label">Sipariş ID:</label>
+            <input type="number" id="siparisId" name="siparisId" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a th:href="@{/teslimat/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

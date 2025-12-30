@@ -1,0 +1,18 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/vardiya/update/{id}(id=${vardiya.id})}" method="post">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID:</label>
+            <input type="text" id="id" name="id" th:value="${vardiya.id}" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="saatler" class="form-label">Saatler:</label>
+            <input type="text" id="saatler" name="saatler" th:value="${vardiya.saatler}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="calisanId" class="form-label">Çalışan ID:</label>
+            <input type="number" id="calisanId" name="calisanId" th:value="${vardiya.calisanId}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a th:href="@{/vardiya/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

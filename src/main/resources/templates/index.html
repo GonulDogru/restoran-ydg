@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="|${pageTitle} - Yönetim Paneli|"></title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+    #navList {
+    list-style-type: none;
+    padding: 0;
+    }
+    .active {
+        background: #bb2b2b !important;
+    }
+    #navList li {
+        float: left;
+        margin: 5px;
+        padding: 5px;
+        background: #5e5e5d;
+        color: #000;
+        border-radius: 3px;
+    }
+
+    .hidden { display: none; }
+
+    nav button {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    #navList li:hover {
+        background-color: #d99ad7;
+    }
+    nav a{
+        color:#fff ;
+        text-decoration: none !important;
+    }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('menuToggle').addEventListener('click', function() {
+              var navList = document.getElementById('navList');
+              navList.classList.toggle('hidden');
+
+              // Toggle button text
+              if (navList.classList.contains('hidden')) {
+                this.textContent = 'Menüyü Aç';
+              } else {
+                this.textContent = 'Menüyü Kapat';
+              }
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="sidebar" th:replace="~{fragments/sidebar :: sidebar}"></div>
+<div class="content container">
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <div th:replace="~{fragments/header :: header}"></div>
+            <main>
+                <div th:replace="~{__${content}__}"></div>
+            </main>
+            <div th:replace="~{fragments/footer :: footer}"></div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

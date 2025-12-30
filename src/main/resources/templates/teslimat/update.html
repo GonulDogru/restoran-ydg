@@ -1,0 +1,26 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/teslimat/update/{id}(id=${teslimat.id})}" method="post">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID:</label>
+            <input type="text" id="id" name="id" th:value="${teslimat.id}" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Adres:</label>
+            <input type="text" id="address" name="address" th:value="${teslimat.address}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="durum" class="form-label">Durum:</label>
+            <input type="text" id="durum" name="durum" th:value="${teslimat.durum}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="restaurantId" class="form-label">Restaurant ID:</label>
+            <input type="number" id="restaurantId" name="restaurantId" th:value="${teslimat.restaurantId}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="siparisId" class="form-label">Sipariş ID:</label>
+            <input type="number" id="siparisId" name="siparisId" th:value="${teslimat.siparisId}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a th:href="@{/teslimat/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

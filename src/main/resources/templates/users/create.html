@@ -1,0 +1,25 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/users/save}" th:object="${kullaniciForm}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">Kullanıcı Adı:</label>
+            <input type="text" th:field="*{username}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Şifre:</label>
+            <input type="password" th:field="*{password}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label>Adres:</label>
+            <input type="text" th:field="*{adres}" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Telefon:</label>
+            <input type="text" th:field="*{telefon}" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a th:href="@{/users/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

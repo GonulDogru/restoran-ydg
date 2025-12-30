@@ -1,0 +1,22 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/siparis/save}" method="post">
+        <div class="mb-3">
+            <label for="tarih" class="form-label">Tarih:</label>
+            <input type="date" id="tarih" name="tarih" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount:</label>
+            <input type="number" id="amount" step="0.01" name="amount" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="userId" class="form-label">User ID:</label>
+            <input type="number" id="userId" name="userId" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="masaId" class="form-label">Masa ID:</label>
+            <input type="number" id="masaId" name="masaId" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a th:href="@{/siparis/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

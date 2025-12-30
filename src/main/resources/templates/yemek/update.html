@@ -1,0 +1,18 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/yemek/update/{id}(id=${yemek.id})}" method="post">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID:</label>
+            <input type="text" id="id" name="id" th:value="${yemek.id}" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Yemek Adı:</label>
+            <input type="text" id="name" name="name" th:value="${yemek.name}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="menuId" class="form-label">Menu ID:</label>
+            <input type="number" id="menuId" name="menuId" th:value="${yemek.menuId}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a th:href="@{/yemek/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

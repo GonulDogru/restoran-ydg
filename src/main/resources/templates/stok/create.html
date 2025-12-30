@@ -1,0 +1,26 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/stok/save}" method="post">
+        <div class="mb-3">
+            <label for="miktar" class="form-label">Miktar:</label>
+            <input type="number" id="miktar" name="miktar" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="yemekId" class="form-label">Yemek ID:</label>
+            <input type="number" id="yemekId" name="yemekId" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="icecekId" class="form-label">İçecek ID:</label>
+            <input type="number" id="icecekId" name="icecekId" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="tatliId" class="form-label">Tatlı ID:</label>
+            <input type="number" id="tatliId" name="tatliId" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="tedarikciId" class="form-label">Tedarikçi ID:</label>
+            <input type="number" id="tedarikciId" name="tedarikciId" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a th:href="@{/stok/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>

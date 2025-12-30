@@ -1,0 +1,14 @@
+<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/vardiya/save}" method="post">
+        <div class="mb-3">
+            <label for="saatler" class="form-label">Saatler:</label>
+            <input type="text" id="saatler" name="saatler" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="calisanId" class="form-label">Çalışan ID:</label>
+            <input type="number" id="calisanId" name="calisanId" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a th:href="@{/vardiya/list}" class="btn btn-secondary">Geri Dön</a>
+    </form>
+</div>
