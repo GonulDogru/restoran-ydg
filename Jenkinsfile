@@ -3,11 +3,17 @@ pipeline {
 
     options { timestamps() }
 
-    environment {
-        // Jenkins Docker container içinde çalıştığı için:
-        APP_BASE_URL = 'http://host.docker.internal:8091'
-        SELENIUM_REMOTE_URL = 'http://host.docker.internal:4444/wd/hub'
-    }
+   environment {
+       APP_BASE_URL = 'http://host.docker.internal:8091'
+       SELENIUM_REMOTE_URL = 'http://host.docker.internal:4444/wd/hub'
+
+       // Testcontainers, Ryuk'a yanlış IP (172.17.0.1) ile gitmesin:
+       TESTCONTAINERS_HOST_OVERRIDE = 'host.docker.internal'
+
+       // Docker-in-Docker / socket mount senaryolarında Ryuk sık takılır:
+       TESTCONTAINERS_RYUK_DISABLED = 'true'
+   }
+
 
     stages {
 
