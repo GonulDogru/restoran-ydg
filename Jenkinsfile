@@ -56,10 +56,18 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            sh 'docker compose down -v || true'
-            archiveArtifacts artifacts: 'target/site/jacoco/**', allowEmptyArchive: true
+  post {
+    always {
+      script {
+        // workspace yoksa post'ta sh çalışmasın diye koruma
+        try {
+          sh 'docker compose down -v || true'
+        } catch (e) {
+          echo "Post cleanup skipped: ${e}"
         }
+      }
+      archiveArtifacts artifacts: 'target/site/jacoco/**', allowEmptyArchive: true
     }
+  }
+
 }
