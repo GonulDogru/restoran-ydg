@@ -1,69 +1,97 @@
-<div th:fragment="sidebar" class="sidebar bg-dark text-white p-3" xmlns:th="http://www.thymeleaf.org">
-    <img src="/img/logo-min.png" style="width: 55px;float: left;margin: 13px;" />
-    <a href="/"><h3 style="float:left;line-height: 58px; color:#fff;">Restoran Yönetim Paneli</h3></a>
-
-    <nav>
-        <button id="menuToggle"  style="float:right; margin-top:10px;">Menüyü Kapat</button>
-        <div style="clear: both;"></div>
-        <ul id="navList">
-            <li th:classappend="${page == 'home' ? 'active' : ''}"><a th:href="@{/}">Ana Sayfa</a></li>
-            <li th:classappend="${page == 'garson' ? 'active' : ''}"><a th:href="@{/garson/list}">Garsonlar</a></li>
-            <li th:classappend="${page == 'vardiya' ? 'active' : ''}"><a th:href="@{/vardiya/list}">Vardiyalar</a></li>
-            <li th:classappend="${page == 'calisan' ? 'active' : ''}"><a th:href="@{/calisan/list}">Çalışanlar</a></li>
-            <li th:classappend="${page == 'iletisim' ? 'active' : ''}"><a th:href="@{/iletisim/list}">İletişim</a></li>
-            <li th:classappend="${page == 'indirim' ? 'active' : ''}"><a th:href="@{/indirim/list}">İndirimler</a></li>
-            <li th:classappend="${page == 'masa' ? 'active' : ''}"><a th:href="@{/masa/list}">Masalar</a></li>
-            <li th:classappend="${page == 'menu' ? 'active' : ''}"><a th:href="@{/menu/list}">Menü</a></li>
-            <li th:classappend="${page == 'odeme' ? 'active' : ''}"><a th:href="@{/odeme/list}">Ödemeler</a></li>
-            <li th:classappend="${page == 'restaurant' ? 'active' : ''}"><a th:href="@{/restaurant/list}">Restoran</a></li>
-            <li th:classappend="${page == 'rezervasyon' ? 'active' : ''}"><a th:href="@{/rezervasyon/list}">Rezervasyonlar</a></li>
-            <li th:classappend="${page == 'siparis' ? 'active' : ''}"><a th:href="@{/siparis/list}">Siparişler</a></li>
-            <li th:classappend="${page == 'stok' ? 'active' : ''}"><a th:href="@{/stok/list}">Stok</a></li>
-            <li th:classappend="${page == 'teslimat' ? 'active' : ''}"><a th:href="@{/teslimat/list}">Teslimatlar</a></li>
-            <li th:classappend="${page == 'geribildirim' ? 'active' : ''}"><a th:href="@{/geribildirim/list}">Geri Bildirimler</a></li>
-            <li th:classappend="${page == 'users' ? 'active' : ''}"><a th:href="@{/users/list}">Kullanıcılar</a></li>
-            <li th:classappend="${page == 'icecek' ? 'active' : ''}"><a th:href="@{/icecek/list}">İçecekler</a></li>
-            <li th:classappend="${page == 'tatli' ? 'active' : ''}"><a th:href="@{/tatli/list}">Tatlılar</a></li>
-            <li th:classappend="${page == 'yemek' ? 'active' : ''}"><a th:href="@{/yemek/list}">Yemekler</a></li>
-            <li th:classappend="${page == 'tedarikci' ? 'active' : ''}"><a th:href="@{/tedarikci/list}">Tedarikçiler</a></li>
-            <li th:classappend="${page == 'admin1' ? 'active' : ''}"><a th:href="@{/admin/list}">Admin</a></li>
-            <li th:classappend="${page == 'superadmin' ? 'active' : ''}"><a th:href="@{/superadmin/list}">Süper Admin</a></li>
+<div th:fragment="sidebar" class="sidebar bg-dark text-white" xmlns:th="http://www.thymeleaf.org">
 
 
-            <!--
-            <li><a href="/" >Ana Sayfa</a></li>
 
-            <li><a th:href="@{/garson/list}" >Garsonlar</a></li>
-            <li><a th:href="@{/vardiya/list}" >Vardiyalar</a></li>
-            <li><a th:href="@{/calisan/list}">Çalışanlar</a></li>
+<!-- Desktop Sidebar -->
+    <aside class="d-none d-lg-flex flex-column bg-dark text-white p-3 vh-100 position-sticky top-0">
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <img th:src="@{/img/logo-min.png}" alt="Logo" style="width:44px;height:44px;">
+            <div class="brand">
+                <a th:href="@{/}" class="text-white text-decoration-none">Restoran Yönetim Paneli</a>
+            </div>
+        </div>
 
+        <nav class="nav nav-pills flex-column gap-1">
+            <a class="nav-link" th:classappend="${page == 'home' ? ' active' : ''}" th:href="@{/}">Ana Sayfa</a>
+            <a class="nav-link" th:classappend="${page == 'garson' ? ' active' : ''}" th:href="@{/garson/list}">Garsonlar</a>
+            <a class="nav-link" th:classappend="${page == 'vardiya' ? ' active' : ''}" th:href="@{/vardiya/list}">Vardiyalar</a>
+            <a class="nav-link" th:classappend="${page == 'calisan' ? ' active' : ''}" th:href="@{/calisan/list}">Çalışanlar</a>
 
-            <li><a th:href="@{/iletisim/list}" >İletişim</a></li>
-            <li><a th:href="@{/indirim/list}" >İndirimler</a></li>
-            <li><a th:href="@{/masa/list}" >Masalar</a></li>
-            <li><a th:href="@{/menu/list}">Menü</a></li>
-            <li><a th:href="@{/odeme/list}" >Ödemeler</a></li>
+            <hr class="border-secondary my-3">
 
-            <li><a th:href="@{/restaurant/list}" >Restoran</a></li>
-            <li><a th:href="@{/rezervasyon/list}" >Rezervasyonlar</a></li>
-            <li><a th:href="@{/siparis/list}" >Siparişler</a></li>
-            <li><a th:href="@{/stok/list}">Stok</a></li>
+            <a class="nav-link" th:classappend="${page == 'iletisim' ? ' active' : ''}" th:href="@{/iletisim/list}">İletişim</a>
+            <a class="nav-link" th:classappend="${page == 'indirim' ? ' active' : ''}" th:href="@{/indirim/list}">İndirimler</a>
+            <a class="nav-link" th:classappend="${page == 'masa' ? ' active' : ''}" th:href="@{/masa/list}">Masalar</a>
+            <a class="nav-link" th:classappend="${page == 'menu' ? ' active' : ''}" th:href="@{/menu/list}">Menü</a>
+            <a class="nav-link" th:classappend="${page == 'odeme' ? ' active' : ''}" th:href="@{/odeme/list}">Ödemeler</a>
+            <a class="nav-link" th:classappend="${page == 'restaurant' ? ' active' : ''}" th:href="@{/restaurant/list}">Restoran</a>
+            <a class="nav-link" th:classappend="${page == 'rezervasyon' ? ' active' : ''}" th:href="@{/rezervasyon/list}">Rezervasyonlar</a>
+            <a class="nav-link" th:classappend="${page == 'siparis' ? ' active' : ''}" th:href="@{/siparis/list}">Siparişler</a>
+            <a class="nav-link" th:classappend="${page == 'stok' ? ' active' : ''}" th:href="@{/stok/list}">Stok</a>
+            <a class="nav-link" th:classappend="${page == 'teslimat' ? ' active' : ''}" th:href="@{/teslimat/list}">Teslimatlar</a>
+            <a class="nav-link" th:classappend="${page == 'geribildirim' ? ' active' : ''}" th:href="@{/geribildirim/list}">Geri Bildirimler</a>
+            <a class="nav-link" th:classappend="${page == 'users' ? ' active' : ''}" th:href="@{/users/list}">Kullanıcılar</a>
 
+            <hr class="border-secondary my-3">
 
-            <li><a th:href="@{/teslimat/list}" >Teslimatlar</a></li>
+            <a class="nav-link" th:classappend="${page == 'icecek' ? ' active' : ''}" th:href="@{/icecek/list}">İçecekler</a>
+            <a class="nav-link" th:classappend="${page == 'tatli' ? ' active' : ''}" th:href="@{/tatli/list}">Tatlılar</a>
+            <a class="nav-link" th:classappend="${page == 'yemek' ? ' active' : ''}" th:href="@{/yemek/list}">Yemekler</a>
+            <a class="nav-link" th:classappend="${page == 'tedarikci' ? ' active' : ''}" th:href="@{/tedarikci/list}">Tedarikçiler</a>
 
-            <li><a th:href="@{/geribildirim/list}">Geri Bildirimler</a></li>
-            <li><a th:href="@{/users/list}">Kullanıcılar</a></li>
+            <hr class="border-secondary my-3">
 
+            <a class="nav-link" th:classappend="${page == 'admin1' ? ' active' : ''}" th:href="@{/admin/list}">Admin</a>
+            <a class="nav-link" th:classappend="${page == 'superadmin' ? ' active' : ''}" th:href="@{/superadmin/list}">Süper Admin</a>
+        </nav>
 
-            <li><a th:href="@{/icecek/list}" >İçecekler</a></li>
-            <li><a th:href="@{/tatli/list}">Tatlılar</a></li>
-            <li><a th:href="@{/yemek/list}" >Yemekler</a></li>
+        <div class="mt-auto pt-3 small text-white-50">
+            İnönü Üniversitesi • 2025
+        </div>
+    </aside>
 
-            <li><a th:href="@{/tedarikci/list}" >Tedarikçiler</a></li>
-            <li><a th:href="@{/admin1/list}" >Admin</a></li>
-            <li><a th:href="@{/superadmin/list}" >Süper Admin</a></li>-->
-        </ul>
-    </nav>
-    <div style="clear: both;"></div>
+    <!-- Mobile Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start bg-dark text-white d-lg-none"
+         tabindex="-1" id="sidebarOffcanvas">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Menü</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <nav class="nav nav-pills flex-column gap-1">
+                <a class="nav-link" th:classappend="${page == 'home' ? ' active' : ''}" th:href="@{/}">Ana Sayfa</a>
+                <a class="nav-link" th:classappend="${page == 'garson' ? ' active' : ''}" th:href="@{/garson/list}">Garsonlar</a>
+                <a class="nav-link" th:classappend="${page == 'vardiya' ? ' active' : ''}" th:href="@{/vardiya/list}">Vardiyalar</a>
+                <a class="nav-link" th:classappend="${page == 'calisan' ? ' active' : ''}" th:href="@{/calisan/list}">Çalışanlar</a>
+
+                <hr class="border-secondary my-3">
+
+                <a class="nav-link" th:classappend="${page == 'iletisim' ? ' active' : ''}" th:href="@{/iletisim/list}">İletişim</a>
+                <a class="nav-link" th:classappend="${page == 'indirim' ? ' active' : ''}" th:href="@{/indirim/list}">İndirimler</a>
+                <a class="nav-link" th:classappend="${page == 'masa' ? ' active' : ''}" th:href="@{/masa/list}">Masalar</a>
+                <a class="nav-link" th:classappend="${page == 'menu' ? ' active' : ''}" th:href="@{/menu/list}">Menü</a>
+                <a class="nav-link" th:classappend="${page == 'odeme' ? ' active' : ''}" th:href="@{/odeme/list}">Ödemeler</a>
+                <a class="nav-link" th:classappend="${page == 'restaurant' ? ' active' : ''}" th:href="@{/restaurant/list}">Restoran</a>
+                <a class="nav-link" th:classappend="${page == 'rezervasyon' ? ' active' : ''}" th:href="@{/rezervasyon/list}">Rezervasyonlar</a>
+                <a class="nav-link" th:classappend="${page == 'siparis' ? ' active' : ''}" th:href="@{/siparis/list}">Siparişler</a>
+                <a class="nav-link" th:classappend="${page == 'stok' ? ' active' : ''}" th:href="@{/stok/list}">Stok</a>
+                <a class="nav-link" th:classappend="${page == 'teslimat' ? ' active' : ''}" th:href="@{/teslimat/list}">Teslimatlar</a>
+                <a class="nav-link" th:classappend="${page == 'geribildirim' ? ' active' : ''}" th:href="@{/geribildirim/list}">Geri Bildirimler</a>
+                <a class="nav-link" th:classappend="${page == 'users' ? ' active' : ''}" th:href="@{/users/list}">Kullanıcılar</a>
+
+                <hr class="border-secondary my-3">
+
+                <a class="nav-link" th:classappend="${page == 'icecek' ? ' active' : ''}" th:href="@{/icecek/list}">İçecekler</a>
+                <a class="nav-link" th:classappend="${page == 'tatli' ? ' active' : ''}" th:href="@{/tatli/list}">Tatlılar</a>
+                <a class="nav-link" th:classappend="${page == 'yemek' ? ' active' : ''}" th:href="@{/yemek/list}">Yemekler</a>
+                <a class="nav-link" th:classappend="${page == 'tedarikci' ? ' active' : ''}" th:href="@{/tedarikci/list}">Tedarikçiler</a>
+
+                <hr class="border-secondary my-3">
+
+                <a class="nav-link" th:classappend="${page == 'admin1' ? ' active' : ''}" th:href="@{/admin/list}">Admin</a>
+                <a class="nav-link" th:classappend="${page == 'superadmin' ? ' active' : ''}" th:href="@{/superadmin/list}">Süper Admin</a>
+            </nav>
+        </div>
+    </div>
+
 </div>
