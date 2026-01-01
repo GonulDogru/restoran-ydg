@@ -1,22 +1,107 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/iletisim/update/{id}(id=${iletisim.id})}" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" name="id" th:value="${iletisim.id}" class="form-control" readonly>
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
+
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">İletişim Güncelle</h5>
+                    <div class="text-muted small">Seçili iletişim kaydını düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/iletisim/list}"
+                   class="btn btn-outline-secondary btn-sm"
+                   data-testid="iletisim-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/iletisim/update/{id}(id=${iletisimForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID'nin post'a garanti gitmesi için -->
+                <input type="hidden" name="id" th:value="${iletisimForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${iletisimForm.id}"
+                               readonly
+                               data-testid="iletisim-id">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="mesaj" class="form-label">Mesaj</label>
+                        <textarea id="mesaj"
+                                  name="mesaj"
+                                  class="form-control"
+                                  rows="4"
+                                  required
+                                  data-testid="iletisim-mesaj"
+                                  th:text="${iletisimForm.mesaj}"></textarea>
+                        <div class="invalid-feedback">Mesaj alanı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label for="userId" class="form-label">User ID</label>
+                        <input type="number"
+                               id="userId"
+                               name="userId"
+                               class="form-control"
+                               th:value="${iletisimForm.userId}"
+                               required
+                               data-testid="iletisim-userId">
+                        <div class="invalid-feedback">User ID zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label for="restaurantId" class="form-label">Restaurant ID</label>
+                        <input type="number"
+                               id="restaurantId"
+                               name="restaurantId"
+                               class="form-control"
+                               th:value="${iletisimForm.restaurantId}"
+                               required
+                               data-testid="iletisim-restaurantId">
+                        <div class="invalid-feedback">Restaurant ID zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="iletisim-update">
+                        Güncelle
+                    </button>
+
+                    <a th:href="@{/iletisim/list}" class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-        <div class="mb-3">
-            <label for="mesaj" class="form-label">Mesaj:</label>
-            <textarea id="mesaj" name="mesaj" class="form-control" th:text="${iletisim.mesaj}"></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="userId" class="form-label">User ID:</label>
-            <input type="number" id="userId" name="userId" th:value="${iletisim.userId}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="restaurantId" class="form-label">Restaurant ID:</label>
-            <input type="number" id="restaurantId" name="restaurantId" th:value="${iletisim.restaurantId}" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/iletisim/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>

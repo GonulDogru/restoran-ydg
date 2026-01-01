@@ -1,26 +1,53 @@
 <div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Tarih</th>
-            <th>Tutar</th>
-            <th>Sipariş ID</th>
-            <th>İşlemler</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="odeme : ${odemeler}">
-            <td th:text="${odeme.id}"></td>
-            <td th:text="${odeme.tarih}"></td>
-            <td th:text="${odeme.amount}"></td>
-            <td th:text="${odeme.siparisId}"></td>
-            <td>
-                <a th:href="@{/odeme/edit/{id}(id=${odeme.id})}" class="btn btn-warning btn-sm">Düzenle</a>
-                <a th:href="@{/odeme/delete/{id}(id=${odeme.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <a th:href="@{/odeme/new}" class="btn btn-primary mt-3">Yeni Ödeme Oluştur</a>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Ödeme Listesi</h5>
+                    <div class="text-muted small">Kayıtlı ödemeleri görüntüleyin, düzenleyin veya silin.</div>
+                </div>
+
+                <a th:href="@{/odeme/new}" class="btn btn-primary btn-sm" data-testid="odeme-new">
+                    Yeni Ödeme
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th style="width: 90px;">ID</th>
+                        <th style="width: 140px;">Masa ID</th>
+                        <th style="width: 160px;">Tutar</th>
+                        <th>Ödeme Yöntemi</th>
+                        <th style="width: 190px;">İşlemler</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="odeme : ${odemeler}">
+                        <td th:text="${odeme.id}"></td>
+                        <td th:text="${odeme.masaId}"></td>
+                        <td th:text="${odeme.tutar}"></td>
+                        <td th:text="${odeme.odemeYontemi}"></td>
+                        <td class="d-flex gap-2">
+                            <a th:href="@{/odeme/edit/{id}(id=${odeme.id})}" class="btn btn-warning btn-sm" data-testid="odeme-edit">
+                                Düzenle
+                            </a>
+                            <a th:href="@{/odeme/delete/{id}(id=${odeme.id})}" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Silmek istediğinize emin misiniz?')" data-testid="odeme-delete">
+                                Sil
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(odemeler)}">
+                        <td colspan="5" class="text-center text-muted py-4">Kayıt bulunamadı.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
 </div>

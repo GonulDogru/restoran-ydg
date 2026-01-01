@@ -1,18 +1,95 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/menu/update/{id}(id=${menu.id})}" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" name="id" th:value="${menu.id}" class="form-control" readonly>
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
+
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Menü Güncelle</h5>
+                    <div class="text-muted small">Seçili menü kaydını düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/menu/list}"
+                   class="btn btn-outline-secondary btn-sm"
+                   data-testid="menu-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/menu/update/{id}(id=${menuForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID'nin post'a garanti gitmesi için -->
+                <input type="hidden" name="id" th:value="${menuForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${menuForm.id}"
+                               readonly
+                               data-testid="menu-id">
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="name" class="form-label">Menü Adı</label>
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               class="form-control"
+                               th:value="${menuForm.name}"
+                               required
+                               data-testid="menu-name">
+                        <div class="invalid-feedback">Menü adı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="restaurantId" class="form-label">Restaurant ID</label>
+                        <input type="number"
+                               id="restaurantId"
+                               name="restaurantId"
+                               class="form-control"
+                               th:value="${menuForm.restaurantId}"
+                               required
+                               data-testid="menu-restaurantId">
+                        <div class="invalid-feedback">Restaurant ID zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="menu-update">
+                        Güncelle
+                    </button>
+
+                    <a th:href="@{/menu/list}" class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-        <div class="mb-3">
-            <label for="name" class="form-label">Menü Adı:</label>
-            <input type="text" id="name" name="name" th:value="${menu.name}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="restaurantId" class="form-label">Restaurant ID:</label>
-            <input type="number" id="restaurantId" name="restaurantId" th:value="${menu.restaurantId}" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/menu/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>

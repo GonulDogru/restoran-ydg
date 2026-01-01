@@ -1,22 +1,107 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/tedarikci/update/{id}(id=${tedarikci.id})}" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" name="id" th:value="${tedarikci.id}" class="form-control" readonly>
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
+
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Tedarikçi Güncelle</h5>
+                    <div class="text-muted small">Seçili tedarikçi kaydını düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/tedarikci/list}"
+                   class="btn btn-outline-secondary btn-sm"
+                   data-testid="tedarikci-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/tedarikci/update/{id}(id=${tedarikciForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID'nin post'a garanti gitmesi için -->
+                <input type="hidden" name="id" th:value="${tedarikciForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${tedarikciForm.id}"
+                               readonly
+                               data-testid="tedarikci-id">
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="name" class="form-label">Tedarikçi Adı</label>
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               class="form-control"
+                               th:value="${tedarikciForm.name}"
+                               required
+                               data-testid="tedarikci-name">
+                        <div class="invalid-feedback">Tedarikçi adı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="phone" class="form-label">Telefon</label>
+                        <input type="text"
+                               id="phone"
+                               name="phone"
+                               class="form-control"
+                               th:value="${tedarikciForm.phone}"
+                               required
+                               data-testid="tedarikci-phone">
+                        <div class="invalid-feedback">Telefon zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="restaurantId" class="form-label">Restaurant ID</label>
+                        <input type="number"
+                               id="restaurantId"
+                               name="restaurantId"
+                               class="form-control"
+                               th:value="${tedarikciForm.restaurantId}"
+                               required
+                               data-testid="tedarikci-restaurantId">
+                        <div class="invalid-feedback">Restaurant ID zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="tedarikci-update">
+                        Güncelle
+                    </button>
+
+                    <a th:href="@{/tedarikci/list}" class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-        <div class="mb-3">
-            <label for="name" class="form-label">Tedarikçi Adı:</label>
-            <input type="text" id="name" name="name" th:value="${tedarikci.name}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="phone" class="form-label">Telefon:</label>
-            <input type="text" id="phone" name="phone" th:value="${tedarikci.phone}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="restaurantId" class="form-label">Restaurant ID:</label>
-            <input type="number" id="restaurantId" name="restaurantId" th:value="${tedarikci.restaurantId}" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/tedarikci/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>

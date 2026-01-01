@@ -1,18 +1,64 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/odeme/save}" method="post">
-        <div class="mb-3">
-            <label for="tarih" class="form-label">Tarih:</label>
-            <input type="date" id="tarih" name="tarih" class="form-control">
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
+
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Yeni Ödeme</h5>
+                    <div class="text-muted small">Ödeme bilgilerini girip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/odeme/list}" class="btn btn-outline-secondary btn-sm" data-testid="odeme-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/odeme/save}" method="post" class="needs-validation" novalidate>
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <label for="masaId" class="form-label">Masa ID</label>
+                        <input type="number" id="masaId" name="masaId" class="form-control" required data-testid="odeme-masaId">
+                        <div class="invalid-feedback">Masa ID zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="tutar" class="form-label">Tutar</label>
+                        <input type="number" id="tutar" name="tutar" step="0.01" class="form-control" required data-testid="odeme-tutar">
+                        <div class="invalid-feedback">Tutar zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="odemeYontemi" class="form-label">Ödeme Yöntemi</label>
+                        <input type="text" id="odemeYontemi" name="odemeYontemi" class="form-control" required data-testid="odeme-odemeYontemi">
+                        <div class="invalid-feedback">Ödeme yöntemi zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary" data-testid="odeme-save">Kaydet</button>
+                    <a th:href="@{/odeme/list}" class="btn btn-outline-secondary">Vazgeç</a>
+                </div>
+
+            </form>
+
         </div>
-        <div class="mb-3">
-            <label for="amount" class="form-label">Tutar:</label>
-            <input type="number" id="amount" step="0.01" name="amount" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="siparisId" class="form-label">Sipariş ID:</label>
-            <input type="number" id="siparisId" name="siparisId" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Kaydet</button>
-        <a th:href="@{/odeme/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>

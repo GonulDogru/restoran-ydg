@@ -1,19 +1,95 @@
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/calisan/update/{id}(id=${calisan.id})}" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" name="id" th:value="${calisan.id}" class="form-control" readonly>
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Çalışan Güncelle</h5>
+                    <div class="text-muted small">Seçili çalışan kaydını düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/calisan/list}"
+                   class="btn btn-outline-secondary btn-sm"
+                   data-testid="calisan-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/calisan/update/{id}(id=${calisanForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID'nin post'a garanti gitmesi için -->
+                <input type="hidden" name="id" th:value="${calisanForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${calisanForm.id}"
+                               readonly
+                               data-testid="calisan-id">
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="name" class="form-label">Ad</label>
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               class="form-control"
+                               th:value="${calisanForm.name}"
+                               required
+                               data-testid="calisan-name">
+                        <div class="invalid-feedback">Ad alanı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="restaurantId" class="form-label">Restoran ID</label>
+                        <input type="number"
+                               id="restaurantId"
+                               name="restaurantId"
+                               class="form-control"
+                               th:value="${calisanForm.restaurantId}"
+                               required
+                               data-testid="calisan-restaurantId">
+                        <div class="invalid-feedback">Restoran ID alanı zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="calisan-update">
+                        Güncelle
+                    </button>
+
+                    <a th:href="@{/calisan/list}" class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-        <div class="mb-3">
-            <label for="name" class="form-label">Ad:</label>
-            <input type="text" id="name" name="name" th:value="${calisan.name}" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label for="restaurantId" class="form-label">Restoran ID:</label>
-            <input type="number" id="restaurantId" name="restaurantId" th:value="${calisan.restaurantId}" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/calisan/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>

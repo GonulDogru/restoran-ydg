@@ -1,3 +1,21 @@
 <header th:fragment="header" xmlns:th="http://www.thymeleaf.org">
-    <h1 th:text="${pageTitle}" class="mb-4"></h1>
+    <nav class="navbar navbar-expand bg-white border-bottom px-3">
+        <button class="btn btn-outline-secondary d-lg-none me-2"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarOffcanvas"
+                aria-controls="sidebarOffcanvas"
+                data-testid="sidebar-toggle">
+            Menü
+        </button>
+
+        <div class="d-flex flex-column">
+            <div class="fw-semibold" th:text="${pageTitle}">Sayfa Başlığı</div>
+            <small class="text-muted">Restoran Yönetim Paneli</small>
+        </div>
+
+        <div class="ms-auto">
+            <span class="badge badge-soft">YDG Final</span>
+        </div>
+    </nav>
 </header>

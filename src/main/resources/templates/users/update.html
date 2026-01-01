@@ -1,24 +1,105 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/users/update/{id}(id=${user.id})}" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" name="id" th:value="${user.id}" class="form-control" readonly>
-        </div>
-        <div class="mb-3">
-            <label for="username" class="form-label">Kullanıcı Adı:</label>
-            <input type="text" id="username" name="username" th:value="${user.username}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Şifre:</label>
-            <input type="password" id="password" name="password" th:value="${user.password}" class="form-control">
-        </div>
-        <label>Adres:</label>
-        <input type="text" th:field="*{adres}" class="form-control" />
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
 
-        <label>Telefon:</label>
-        <input type="text" th:field="*{telefon}" class="form-control" />
+    <div class="card">
+        <div class="card-body">
 
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/users/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Kullanıcı Güncelle</h5>
+                    <div class="text-muted small">Seçili kullanıcı kaydını düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/users/list}" class="btn btn-outline-secondary btn-sm" data-testid="users-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/users/update/{id}(id=${kullaniciForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID post'a garanti gitsin -->
+                <input type="hidden" name="id" th:value="${kullaniciForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${kullaniciForm.id}"
+                               readonly>
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="username" class="form-label">Kullanıcı Adı</label>
+                        <input type="text"
+                               id="username"
+                               name="username"
+                               class="form-control"
+                               th:value="${kullaniciForm.username}"
+                               required>
+                        <div class="invalid-feedback">Kullanıcı adı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="password" class="form-label">Şifre</label>
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               class="form-control"
+                               th:value="${kullaniciForm.password}"
+                               required>
+                        <div class="invalid-feedback">Şifre zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label for="adres" class="form-label">Adres</label>
+                        <input type="text"
+                               id="adres"
+                               name="adres"
+                               class="form-control"
+                               th:value="${kullaniciForm.adres}"
+                               required>
+                        <div class="invalid-feedback">Adres zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label for="telefon" class="form-label">Telefon</label>
+                        <input type="text"
+                               id="telefon"
+                               name="telefon"
+                               class="form-control"
+                               th:value="${kullaniciForm.telefon}"
+                               required>
+                        <div class="invalid-feedback">Telefon zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                    <a th:href="@{/users/list}" class="btn btn-outline-secondary">Vazgeç</a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>

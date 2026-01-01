@@ -1,24 +1,125 @@
 <div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Restaurant Adı</th>
-            <th>Adres</th>
-            <th>İşlemler</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="restaurant : ${restaurants}">
-            <td th:text="${restaurant.id}"></td>
-            <td th:text="${restaurant.name}"></td>
-            <td th:text="${restaurant.address}"></td>
-            <td>
-                <a th:href="@{/restaurant/edit/{id}(id=${restaurant.id})}" class="btn btn-warning btn-sm">Düzenle</a>
-                <a th:href="@{/restaurant/delete/{id}(id=${restaurant.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <a th:href="@{/restaurant/new}" class="btn btn-primary mt-3">Yeni Restaurant Oluştur</a>
+
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex flex-column flex-md-row gap-2 justify-content-between align-items-md-center mb-3">
+                <div>
+                    <h5 class="mb-1">Restoran Listesi</h5>
+                    <div class="text-muted small">Kayıtları listele, ara, güncelle veya sil.</div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <input id="restaurantSearch"
+                           class="form-control"
+                           style="max-width: 260px;"
+                           type="text"
+                           placeholder="Ara: ad / adres"
+                           data-testid="restaurant-search">
+
+                    <a th:href="@{/restaurant/new}" class="btn btn-primary" data-testid="restaurant-new">
+                        Yeni Restoran Oluştur
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle table-hover">
+                    <thead class="table-dark">
+                    <tr>
+                        <th style="width:90px;">ID</th>
+                        <th>Restaurant Adı</th>
+                        <th>Adres</th>
+                        <th style="width:190px;">İşlemler</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="restaurantTbody">
+                    <tr th:each="restaurant : ${restaurants}"
+                        th:attr="data-row-text=${restaurant.name + ' ' + restaurant.address},
+                       data-testid=${'restaurant-row-' + restaurant.id}">
+                        <td th:text="${restaurant.id}"></td>
+                        <td class="fw-semibold" th:text="${restaurant.name}"></td>
+                        <td class="text-muted" th:text="${restaurant.address}"></td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a th:href="@{/restaurant/edit/{id}(id=${restaurant.id})}"
+                                   class="btn btn-warning btn-sm"
+                                   th:attr="data-testid=${'restaurant-edit-' + restaurant.id}">
+                                    Düzenle
+                                </a>
+
+                                <button type="button"
+                                        class="btn btn-danger btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal"
+                                        th:attr="data-delete-url=@{/restaurant/delete/{id}(id=${restaurant.id})},
+                                 data-delete-name=${restaurant.name},
+                                 data-testid=${'restaurant-delete-' + restaurant.id}">
+                                    Sil
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-info mb-0" th:if="${#lists.isEmpty(restaurants)}">
+                Henüz kayıt yok. “Yeni Restoran Oluştur” ile ilk kaydı ekleyebilirsin.
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Delete confirm modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Silme Onayı</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-muted">Bu kaydı silmek istediğine emin misin?</div>
+                    <div class="fw-semibold mt-2" id="deleteTargetName">-</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                    <a id="deleteConfirmBtn" class="btn btn-danger" href="#" data-testid="restaurant-delete-confirm">Sil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Search filter (client-side)
+            const input = document.getElementById('restaurantSearch');
+            const rows = document.querySelectorAll('#restaurantTbody tr');
+
+            if (input) {
+                input.addEventListener('input', function () {
+                    const q = (this.value || '').toLowerCase().trim();
+                    rows.forEach(r => {
+                        const t = (r.getAttribute('data-row-text') || '').toLowerCase();
+                        r.style.display = t.includes(q) ? '' : 'none';
+                    });
+                });
+            }
+
+            // Delete modal binding
+            const modal = document.getElementById('deleteModal');
+            if (modal) {
+                modal.addEventListener('show.bs.modal', function (event) {
+                    const btn = event.relatedTarget;
+                    const url = btn.getAttribute('data-delete-url');
+                    const name = btn.getAttribute('data-delete-name') || '';
+                    document.getElementById('deleteConfirmBtn').setAttribute('href', url);
+                    document.getElementById('deleteTargetName').textContent = name;
+                });
+            }
+        })();
+    </script>
+
 </div>

@@ -8,17 +8,28 @@
             <th>İşlemler</th>
         </tr>
         </thead>
+
         <tbody>
+        <!-- BOŞSA -->
+        <tr th:if="${#lists.isEmpty(superadminler)}">
+            <td colspan="4" class="text-center text-muted py-4">
+                Henüz hiç süper admin yok. “Yeni Superadmin Oluştur” ile ekleyin.
+            </td>
+        </tr>
+
+        <!-- DOLUYSA -->
         <tr th:each="superadmin : ${superadminler}">
             <td th:text="${superadmin.id}"></td>
             <td th:text="${superadmin.username}"></td>
             <td th:text="${superadmin.password}"></td>
             <td>
                 <a th:href="@{/superadmin/edit/{id}(id=${superadmin.id})}" class="btn btn-warning btn-sm">Düzenle</a>
-                <a th:href="@{/superadmin/delete/{id}(id=${superadmin.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</a>
+                <a th:href="@{/superadmin/delete/{id}(id=${superadmin.id})}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</a>
             </td>
         </tr>
         </tbody>
     </table>
+
     <a th:href="@{/superadmin/new}" class="btn btn-primary mt-3">Yeni Superadmin Oluştur</a>
 </div>

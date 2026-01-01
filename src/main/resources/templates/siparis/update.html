@@ -1,26 +1,120 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/siparis/update/{id}(id=${siparis.id})}" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" name="id" th:value="${siparis.id}" class="form-control" readonly>
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
+
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Sipariş Güncelle</h5>
+                    <div class="text-muted small">Seçili siparişi düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/siparis/list}"
+                   class="btn btn-outline-secondary btn-sm"
+                   data-testid="siparis-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/siparis/update/{id}(id=${siparisForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID'nin post'a garanti gitmesi için -->
+                <input type="hidden" name="id" th:value="${siparisForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${siparisForm.id}"
+                               readonly
+                               data-testid="siparis-id">
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="tarih" class="form-label">Tarih</label>
+                        <input type="date"
+                               id="tarih"
+                               name="tarih"
+                               class="form-control"
+                               th:value="${siparisForm.tarih}"
+                               required
+                               data-testid="siparis-tarih">
+                        <div class="invalid-feedback">Tarih alanı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="amount" class="form-label">Tutar</label>
+                        <input type="number"
+                               id="amount"
+                               name="amount"
+                               step="0.01"
+                               class="form-control"
+                               th:value="${siparisForm.amount}"
+                               required
+                               data-testid="siparis-amount">
+                        <div class="invalid-feedback">Tutar alanı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="userId" class="form-label">User ID</label>
+                        <input type="number"
+                               id="userId"
+                               name="userId"
+                               class="form-control"
+                               th:value="${siparisForm.userId}"
+                               required
+                               data-testid="siparis-userId">
+                        <div class="invalid-feedback">User ID zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="masaId" class="form-label">Masa ID</label>
+                        <input type="number"
+                               id="masaId"
+                               name="masaId"
+                               class="form-control"
+                               th:value="${siparisForm.masaId}"
+                               required
+                               data-testid="siparis-masaId">
+                        <div class="invalid-feedback">Masa ID zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="siparis-update">
+                        Güncelle
+                    </button>
+
+                    <a th:href="@{/siparis/list}" class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-        <div class="mb-3">
-            <label for="tarih" class="form-label">Tarih:</label>
-            <input type="date" id="tarih" name="tarih" th:value="${siparis.tarih}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="amount" class="form-label">Amount:</label>
-            <input type="number" id="amount" step="0.01" name="amount" th:value="${siparis.amount}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="userId" class="form-label">User ID:</label>
-            <input type="number" id="userId" name="userId" th:value="${siparis.userId}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="masaId" class="form-label">Masa ID:</label>
-            <input type="number" id="masaId" name="masaId" th:value="${siparis.masaId}" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/siparis/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>

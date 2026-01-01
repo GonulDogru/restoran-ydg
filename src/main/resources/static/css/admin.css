@@ -1,0 +1,57 @@
+/* Sayfa (body) değil, içerik alanı scroll olsun */
+.app-shell {
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sağ içerik alanı kendi içinde kayar */
+.content-area {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/* Sidebar sabit + kendi içinde scroll */
+.sidebar aside {
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1020; /* içerik üstüne binmesin */
+}
+
+/* Nav-pills active/focus renklerini sabitle (beyaz olmasın) */
+.sidebar .nav-pills {
+    --bs-nav-pills-link-active-bg: rgba(13, 110, 253, .25);
+    --bs-nav-pills-link-active-color: #fff;
+}
+
+/* Tıklayınca/focus olunca beyaz arka plan verme */
+.sidebar .nav-link:focus,
+.sidebar .nav-link:focus-visible {
+    outline: 0;
+    box-shadow: none;
+    background: rgba(255, 255, 255, .10);
+    color: #fff;
+}
+/* Sayfa kaymasın, layout sabit kalsın */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.app-shell {
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar tam yükseklik + kendi içinde scroll + koyu arkaplan garanti */
+.sidebar {
+    height: 100vh;
+    overflow-y: auto;
+    background: #212529; /* bootstrap bg-dark ile aynı ton */
+}
+
+/* Sağ taraf (içerik) kendi içinde kaysın */
+.content-area {
+    height: 100vh;
+    overflow-y: auto;
+}
+

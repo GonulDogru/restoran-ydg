@@ -1,30 +1,123 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/stok/update/{id}(id=${stok.id})}" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" name="id" th:value="${stok.id}" class="form-control" readonly>
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
+
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Stok Güncelle</h5>
+                    <div class="text-muted small">Seçili stok kaydını düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/stok/list}"
+                   class="btn btn-outline-secondary btn-sm"
+                   data-testid="stok-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/stok/update/{id}(id=${stokForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID'nin post'a garanti gitmesi için -->
+                <input type="hidden" name="id" th:value="${stokForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${stokForm.id}"
+                               readonly
+                               data-testid="stok-id">
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="miktar" class="form-label">Miktar</label>
+                        <input type="number"
+                               id="miktar"
+                               name="miktar"
+                               class="form-control"
+                               th:value="${stokForm.miktar}"
+                               required
+                               data-testid="stok-miktar">
+                        <div class="invalid-feedback">Miktar alanı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="yemekId" class="form-label">Yemek ID</label>
+                        <input type="number"
+                               id="yemekId"
+                               name="yemekId"
+                               class="form-control"
+                               th:value="${stokForm.yemekId}"
+                               data-testid="stok-yemekId">
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="icecekId" class="form-label">İçecek ID</label>
+                        <input type="number"
+                               id="icecekId"
+                               name="icecekId"
+                               class="form-control"
+                               th:value="${stokForm.icecekId}"
+                               data-testid="stok-icecekId">
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="tatliId" class="form-label">Tatlı ID</label>
+                        <input type="number"
+                               id="tatliId"
+                               name="tatliId"
+                               class="form-control"
+                               th:value="${stokForm.tatliId}"
+                               data-testid="stok-tatliId">
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="tedarikciId" class="form-label">Tedarikçi ID</label>
+                        <input type="number"
+                               id="tedarikciId"
+                               name="tedarikciId"
+                               class="form-control"
+                               th:value="${stokForm.tedarikciId}"
+                               data-testid="stok-tedarikciId">
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="stok-update">
+                        Güncelle
+                    </button>
+
+                    <a th:href="@{/stok/list}" class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-        <div class="mb-3">
-            <label for="miktar" class="form-label">Miktar:</label>
-            <input type="number" id="miktar" name="miktar" th:value="${stok.miktar}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="yemekId" class="form-label">Yemek ID:</label>
-            <input type="number" id="yemekId" name="yemekId" th:value="${stok.yemekId}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="icecekId" class="form-label">İçecek ID:</label>
-            <input type="number" id="icecekId" name="icecekId" th:value="${stok.icecekId}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="tatliId" class="form-label">Tatlı ID:</label>
-            <input type="number" id="tatliId" name="tatliId" th:value="${stok.tatliId}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="tedarikciId" class="form-label">Tedarikçi ID:</label>
-            <input type="number" id="tedarikciId" name="tedarikciId" th:value="${stok.tedarikciId}" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/stok/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>

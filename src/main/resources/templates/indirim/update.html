@@ -1,18 +1,96 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/indirim/update/{id}(id=${indirim.id})}" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" name="id" th:value="${indirim.id}" class="form-control" readonly>
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
+
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">İndirim Güncelle</h5>
+                    <div class="text-muted small">Seçili indirim kaydını düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/indirim/list}"
+                   class="btn btn-outline-secondary btn-sm"
+                   data-testid="indirim-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/indirim/update/{id}(id=${indirimForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID'nin post'a garanti gitmesi için -->
+                <input type="hidden" name="id" th:value="${indirimForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${indirimForm.id}"
+                               readonly
+                               data-testid="indirim-id">
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="amount" class="form-label">Tutar</label>
+                        <input type="number"
+                               id="amount"
+                               name="amount"
+                               class="form-control"
+                               th:value="${indirimForm.amount}"
+                               required
+                               step="0.01"
+                               data-testid="indirim-amount">
+                        <div class="invalid-feedback">Tutar alanı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="kullaniciId" class="form-label">Kullanıcı ID</label>
+                        <input type="number"
+                               id="kullaniciId"
+                               name="kullaniciId"
+                               class="form-control"
+                               th:value="${indirimForm.kullaniciId}"
+                               required
+                               data-testid="indirim-kullaniciId">
+                        <div class="invalid-feedback">Kullanıcı ID alanı zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="indirim-update">
+                        Güncelle
+                    </button>
+
+                    <a th:href="@{/indirim/list}" class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-        <div class="mb-3">
-            <label for="amount" class="form-label">Tutar:</label>
-            <input type="number" id="amount" name="amount" th:value="${indirim.amount}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="kullaniciId" class="form-label">Kullanıcı ID:</label>
-            <input type="number" id="kullaniciId" name="kullaniciId" th:value="${indirim.kullaniciId}" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/indirim/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>

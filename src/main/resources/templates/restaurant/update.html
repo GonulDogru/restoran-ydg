@@ -1,24 +1,95 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:object="${restaurantForm}"
-          th:action="@{/restaurant/update/{id}(id=*{id})}"
-          method="post">
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
 
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" th:field="*{id}" class="form-control" readonly>
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Restoran Güncelle</h5>
+                    <div class="text-muted small">Seçili restoran kaydını düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/restaurant/list}"
+                   class="btn btn-outline-secondary btn-sm"
+                   data-testid="restaurant-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/restaurant/update/{id}(id=${restaurantForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID'nin post'a garanti gitmesi için -->
+                <input type="hidden" name="id" th:value="${restaurantForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${restaurantForm.id}"
+                               readonly
+                               data-testid="restaurant-id">
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="name" class="form-label">Restaurant Adı</label>
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               class="form-control"
+                               th:value="${restaurantForm.name}"
+                               required
+                               data-testid="restaurant-name">
+                        <div class="invalid-feedback">Restaurant adı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="address" class="form-label">Adres</label>
+                        <input type="text"
+                               id="address"
+                               name="address"
+                               class="form-control"
+                               th:value="${restaurantForm.address}"
+                               required
+                               data-testid="restaurant-address">
+                        <div class="invalid-feedback">Adres zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="restaurant-update">
+                        Güncelle
+                    </button>
+
+                    <a th:href="@{/restaurant/list}" class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </form>
+
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label for="name" class="form-label">Restaurant Adı:</label>
-            <input type="text" id="name" th:field="*{name}" class="form-control">
-        </div>
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
 
-        <div class="mb-3">
-            <label for="address" class="form-label">Adres:</label>
-            <input type="text" id="address" th:field="*{address}" class="form-control">
-        </div>
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
 
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/restaurant/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
 </div>

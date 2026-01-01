@@ -1,18 +1,95 @@
-<div th:fragment="content" class="form-container" xmlns:th="http://www.thymeleaf.org">
-    <form th:action="@{/vardiya/update/{id}(id=${vardiya.id})}" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">ID:</label>
-            <input type="text" id="id" name="id" th:value="${vardiya.id}" class="form-control" readonly>
+<div th:fragment="content" xmlns:th="http://www.thymeleaf.org">
+
+    <div class="card">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-1">Vardiya Güncelle</h5>
+                    <div class="text-muted small">Seçili vardiya kaydını düzenleyip kaydedin.</div>
+                </div>
+
+                <a th:href="@{/vardiya/list}"
+                   class="btn btn-outline-secondary btn-sm"
+                   data-testid="vardiya-back">
+                    Listeye Dön
+                </a>
+            </div>
+
+            <form th:action="@{/vardiya/update/{id}(id=${vardiyaForm.id})}"
+                  method="post"
+                  class="needs-validation"
+                  novalidate>
+
+                <!-- ID'nin post'a garanti gitmesi için -->
+                <input type="hidden" name="id" th:value="${vardiyaForm.id}">
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-2">
+                        <label for="idView" class="form-label">ID</label>
+                        <input type="text"
+                               id="idView"
+                               class="form-control"
+                               th:value="${vardiyaForm.id}"
+                               readonly
+                               data-testid="vardiya-id">
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="saatler" class="form-label">Saatler</label>
+                        <input type="text"
+                               id="saatler"
+                               name="saatler"
+                               class="form-control"
+                               th:value="${vardiyaForm.saatler}"
+                               required
+                               data-testid="vardiya-saatler">
+                        <div class="invalid-feedback">Saatler alanı zorunludur.</div>
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="calisanId" class="form-label">Çalışan ID</label>
+                        <input type="number"
+                               id="calisanId"
+                               name="calisanId"
+                               class="form-control"
+                               th:value="${vardiyaForm.calisanId}"
+                               required
+                               data-testid="vardiya-calisanId">
+                        <div class="invalid-feedback">Çalışan ID zorunludur.</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="vardiya-update">
+                        Güncelle
+                    </button>
+
+                    <a th:href="@{/vardiya/list}" class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-        <div class="mb-3">
-            <label for="saatler" class="form-label">Saatler:</label>
-            <input type="text" id="saatler" name="saatler" th:value="${vardiya.saatler}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="calisanId" class="form-label">Çalışan ID:</label>
-            <input type="number" id="calisanId" name="calisanId" th:value="${vardiya.calisanId}" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a th:href="@{/vardiya/list}" class="btn btn-secondary">Geri Dön</a>
-    </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+    </script>
+
 </div>
