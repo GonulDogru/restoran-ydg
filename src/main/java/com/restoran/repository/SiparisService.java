@@ -5,13 +5,20 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class SiparisService {
+
+    private static final DateTimeFormatter STRICT_DATE =
+            DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
 
     // 1. Constructor Injection (Güvenli ve Modern Yöntem)
     private final JdbcTemplate jdbcTemplate;
@@ -24,11 +31,15 @@ public class SiparisService {
     // SimpleDateFormat static olmamalıdır. Her işlemde yeni instance oluşturuyoruz.
 
     private Date parseDate(String dateStr) {
+        if (dateStr == null || dateStr.isBlank()) {
+            throw new IllegalArgumentException("Geçersiz tarih formatı: " + dateStr + " (yyyy-MM-dd olmalı)");
+        }
         try {
-            // String tarihi (örn: "2023-10-25") Java Date objesine çevirir
-            return new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Geçersiz tarih formatı: " + dateStr, e);
+            // Strict parse: yyyy-MM-dd (örn: 2025-12-30). 30-12-2025 veya 2025-02-30 gibi değerleri reddeder.
+            LocalDate ld = LocalDate.parse(dateStr, STRICT_DATE);
+            return java.sql.Date.valueOf(ld); // java.sql.Date extends java.util.Date
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Geçersiz tarih formatı: " + dateStr + " (yyyy-MM-dd olmalı)", e);
         }
     }
 
@@ -43,18 +54,20 @@ public class SiparisService {
     private final RowMapper<Siparis> siparisRowMapper = (rs, rowNum) -> {
         return new Siparis.SiparisBuilder()
                 .setId(rs.getInt("id"))
-                .setTarih(formatDate(rs.getDate("tarih"))) // SQL Date -> String
+                .setTarih(formatDate(rs.getDate("tarih")))
                 .setAmount(rs.getFloat("amount"))
                 .setUserId(rs.getInt("user_id"))
                 .setMasaId(rs.getInt("masa_id"))
                 .build();
     };
 
+    // 3. CRUD İşlemleri
+
     public String createSiparis(Siparis siparis) {
         String sql = "INSERT INTO siparis (tarih, amount, user_id, masa_id) VALUES (?, ?, ?, ?)";
 
         int rows = jdbcTemplate.update(sql,
-                parseDate(siparis.getTarih()), // String -> Java/SQL Date
+                parseDate(siparis.getTarih()), // String -> Java/SQL Date (strict)
                 siparis.getAmount(),
                 siparis.getUserId(),
                 siparis.getMasaId());
@@ -64,7 +77,6 @@ public class SiparisService {
 
     public List<Siparis> getAllSiparisler() {
         String sql = "SELECT * FROM siparis";
-        // Tanımladığımız mapper'ı kullanıyoruz
         return jdbcTemplate.query(sql, siparisRowMapper);
     }
 
@@ -91,6 +103,7 @@ public class SiparisService {
     public String deleteSiparis(int id) {
         String sql = "DELETE FROM siparis WHERE id = ?";
         int rows = jdbcTemplate.update(sql, id);
+
         return (rows > 0) ? "Sipariş başarıyla silindi!" : "Sipariş bulunamadı!";
     }
 }
