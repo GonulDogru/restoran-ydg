@@ -3,6 +3,7 @@ package com.restoran.repository;
 import com.restoran.model.Stok;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,10 +25,10 @@ class StokServiceUnitTest {
     private StokService stokService;
 
     @Test
-    void createStok_rowsPositive_shouldReturnSuccessMessage() {
+    void createStok_shouldInsertAndReturnSuccessMessage_whenRowsPositive() {
         Stok stok = new Stok.StokBuilder()
                 .setId(0)
-                .setMiktar(50)
+                .setMiktar(10)
                 .setYemekId(1)
                 .setIcecekId(2)
                 .setTatliId(3)
@@ -36,81 +37,109 @@ class StokServiceUnitTest {
 
         when(jdbcTemplate.update(
                 eq("INSERT INTO stok (miktar, yemek_id, icecek_id, tatli_id, tedarikci_id) VALUES (?, ?, ?, ?, ?)"),
-                eq(50), eq(1), eq(2), eq(3), eq(4)
+                eq(10), eq(1), eq(2), eq(3), eq(4)
         )).thenReturn(1);
 
-        String result = stokService.createStok(stok);
+        String msg = stokService.createStok(stok);
 
-        assertEquals("Stok başarıyla eklendi.", result);
+        assertEquals("Stok başarıyla eklendi.", msg);
         verify(jdbcTemplate, times(1)).update(
                 eq("INSERT INTO stok (miktar, yemek_id, icecek_id, tatli_id, tedarikci_id) VALUES (?, ?, ?, ?, ?)"),
-                eq(50), eq(1), eq(2), eq(3), eq(4)
+                eq(10), eq(1), eq(2), eq(3), eq(4)
         );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void getAllStoklar_shouldQueryAll() {
-        when(jdbcTemplate.query(eq("SELECT * FROM stok"), any(RowMapper.class)))
-                .thenReturn(List.of());
+    void getAllStoklar_shouldQueryTable() {
+        when(jdbcTemplate.query(
+                eq("SELECT * FROM stok"),
+                ArgumentMatchers.<RowMapper<Stok>>any()
+        )).thenReturn(List.of());
 
-        List<Stok> result = stokService.getAllStoklar();
+        List<Stok> list = stokService.getAllStoklar();
 
-        assertNotNull(result);
-        verify(jdbcTemplate, times(1)).query(eq("SELECT * FROM stok"), any(RowMapper.class));
+        assertNotNull(list);
+        verify(jdbcTemplate, times(1)).query(
+                eq("SELECT * FROM stok"),
+                ArgumentMatchers.<RowMapper<Stok>>any()
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void getStokById_shouldQueryById() {
+    void getStokById_shouldReturnFirstElement_whenFound() {
+        int id = 5;
         Stok expected = new Stok.StokBuilder()
-                .setId(1).setMiktar(10).setYemekId(1).setIcecekId(0).setTatliId(0).setTedarikciId(2)
+                .setId(id)
+                .setMiktar(20)
+                .setYemekId(1)
+                .setIcecekId(2)
+                .setTatliId(3)
+                .setTedarikciId(4)
                 .build();
 
-        when(jdbcTemplate.queryForObject(eq("SELECT * FROM stok WHERE id = ?"), any(RowMapper.class), eq(1)))
-                .thenReturn(expected);
+        // DİKKAT: Service query(...) kullanıyor.
+        when(jdbcTemplate.query(
+                eq("SELECT * FROM stok WHERE id = ?"),
+                ArgumentMatchers.<RowMapper<Stok>>any(),
+                eq(id)
+        )).thenReturn(List.of(expected));
 
-        Stok result = stokService.getStokById(1);
+        Stok result = stokService.getStokById(id);
 
-        assertEquals(expected, result);
-        verify(jdbcTemplate, times(1)).queryForObject(eq("SELECT * FROM stok WHERE id = ?"), any(RowMapper.class), eq(1));
+        assertSame(expected, result);
+        verify(jdbcTemplate, times(1)).query(
+                eq("SELECT * FROM stok WHERE id = ?"),
+                ArgumentMatchers.<RowMapper<Stok>>any(),
+                eq(id)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void updateStok_rowsPositive_shouldReturnSuccessMessage() {
+    void updateStok_shouldExecuteUpdateAndReturnSuccess_whenRowsPositive() {
+        int id = 7;
         Stok stok = new Stok.StokBuilder()
-                .setId(999)
-                .setMiktar(99)
-                .setYemekId(7)
-                .setIcecekId(8)
-                .setTatliId(9)
-                .setTedarikciId(10)
+                .setId(id)
+                .setMiktar(30)
+                .setYemekId(11)
+                .setIcecekId(12)
+                .setTatliId(13)
+                .setTedarikciId(14)
                 .build();
 
         when(jdbcTemplate.update(
                 eq("UPDATE stok SET miktar = ?, yemek_id = ?, icecek_id = ?, tatli_id = ?, tedarikci_id = ? WHERE id = ?"),
-                eq(99), eq(7), eq(8), eq(9), eq(10), eq(5)
+                eq(30), eq(11), eq(12), eq(13), eq(14), eq(id)
         )).thenReturn(1);
 
-        String result = stokService.updateStok(5, stok);
+        String msg = stokService.updateStok(id, stok);
 
-        assertEquals("Stok başarıyla güncellendi.", result);
+        assertEquals("Stok başarıyla güncellendi.", msg);
         verify(jdbcTemplate, times(1)).update(
                 eq("UPDATE stok SET miktar = ?, yemek_id = ?, icecek_id = ?, tatli_id = ?, tedarikci_id = ? WHERE id = ?"),
-                eq(99), eq(7), eq(8), eq(9), eq(10), eq(5)
+                eq(30), eq(11), eq(12), eq(13), eq(14), eq(id)
         );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void deleteStok_rowsPositive_shouldReturnSuccessMessage() {
-        when(jdbcTemplate.update(eq("DELETE FROM stok WHERE id = ?"), eq(3))).thenReturn(1);
+    void deleteStok_shouldExecuteDeleteAndReturnSuccess_whenRowsPositive() {
+        int id = 4;
 
-        String result = stokService.deleteStok(3);
+        when(jdbcTemplate.update(
+                eq("DELETE FROM stok WHERE id = ?"),
+                eq(id)
+        )).thenReturn(1);
 
-        assertEquals("Stok başarıyla silindi!", result);
-        verify(jdbcTemplate, times(1)).update(eq("DELETE FROM stok WHERE id = ?"), eq(3));
+        String msg = stokService.deleteStok(id);
+
+        assertEquals("Stok başarıyla silindi!", msg);
+        verify(jdbcTemplate, times(1)).update(
+                eq("DELETE FROM stok WHERE id = ?"),
+                eq(id)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 }

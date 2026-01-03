@@ -3,6 +3,7 @@ package com.restoran.repository;
 import com.restoran.model.Icecek;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,83 +25,133 @@ class IcecekServiceUnitTest {
     private IcecekService icecekService;
 
     @Test
-    void createIcecek_rowsPositive_shouldReturnSuccessMessage() {
-        Icecek icecek = new Icecek.IcecekBuilder().setId(0).setName("Kola").setMenuId(1).build();
+    void createIcecek_shouldInsertAndReturnSuccessMessage_whenRowsPositive() {
+        Icecek icecek = new Icecek.IcecekBuilder()
+                .setId(0)
+                .setName("Kola")
+                .setMenuId(2)
+                .build();
 
-        when(jdbcTemplate.update(eq("INSERT INTO icecek (name, menu_id) VALUES (?, ?)"), eq("Kola"), eq(1)))
-                .thenReturn(1);
+        when(jdbcTemplate.update(
+                eq("INSERT INTO icecek (name, menu_id) VALUES (?, ?)"),
+                eq("Kola"), eq(2)
+        )).thenReturn(1);
 
-        String result = icecekService.createIcecek(icecek);
+        String msg = icecekService.createIcecek(icecek);
 
-        assertEquals("İçecek başarıyla eklendi.", result);
-        verify(jdbcTemplate, times(1)).update(eq("INSERT INTO icecek (name, menu_id) VALUES (?, ?)"), eq("Kola"), eq(1));
+        assertEquals("İçecek başarıyla eklendi.", msg);
+        verify(jdbcTemplate, times(1)).update(
+                eq("INSERT INTO icecek (name, menu_id) VALUES (?, ?)"),
+                eq("Kola"), eq(2)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void createIcecek_rowsZero_shouldReturnFailureMessage() {
-        Icecek icecek = new Icecek.IcecekBuilder().setId(0).setName("Kola").setMenuId(1).build();
+    void getAllIcecekler_shouldQueryTable() {
+        when(jdbcTemplate.query(
+                eq("SELECT * FROM icecek"),
+                ArgumentMatchers.<RowMapper<Icecek>>any()
+        )).thenReturn(List.of());
 
-        when(jdbcTemplate.update(eq("INSERT INTO icecek (name, menu_id) VALUES (?, ?)"), eq("Kola"), eq(1)))
-                .thenReturn(0);
+        List<Icecek> list = icecekService.getAllIcecekler();
 
-        String result = icecekService.createIcecek(icecek);
-
-        assertEquals("İçecek eklenemedi.", result);
-        verify(jdbcTemplate, times(1)).update(eq("INSERT INTO icecek (name, menu_id) VALUES (?, ?)"), eq("Kola"), eq(1));
+        assertNotNull(list);
+        verify(jdbcTemplate, times(1)).query(
+                eq("SELECT * FROM icecek"),
+                ArgumentMatchers.<RowMapper<Icecek>>any()
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void getAllIcecekler_shouldQueryAll() {
-        when(jdbcTemplate.query(eq("SELECT * FROM icecek"), any(RowMapper.class)))
-                .thenReturn(List.of());
+    void getIcecekById_shouldReturnFirstElement_whenFound() {
+        int id = 5;
+        Icecek expected = new Icecek.IcecekBuilder()
+                .setId(id)
+                .setName("Ayran")
+                .setMenuId(3)
+                .build();
 
-        List<Icecek> result = icecekService.getAllIcecekler();
+        // DİKKAT: Service query(...) kullanıyor, queryForObject değil.
+        when(jdbcTemplate.query(
+                eq("SELECT * FROM icecek WHERE id = ?"),
+                ArgumentMatchers.<RowMapper<Icecek>>any(),
+                eq(id)
+        )).thenReturn(List.of(expected));
 
-        assertNotNull(result);
-        verify(jdbcTemplate, times(1)).query(eq("SELECT * FROM icecek"), any(RowMapper.class));
+        Icecek result = icecekService.getIcecekById(id);
+
+        assertSame(expected, result);
+        verify(jdbcTemplate, times(1)).query(
+                eq("SELECT * FROM icecek WHERE id = ?"),
+                ArgumentMatchers.<RowMapper<Icecek>>any(),
+                eq(id)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void getIcecekById_shouldQueryById() {
-        Icecek expected = new Icecek.IcecekBuilder().setId(2).setName("Ayran").setMenuId(1).build();
+    void getIcecekById_shouldReturnNull_whenNotFound() {
+        int id = 999;
 
-        when(jdbcTemplate.queryForObject(eq("SELECT * FROM icecek WHERE id = ?"), any(RowMapper.class), eq(2)))
-                .thenReturn(expected);
+        when(jdbcTemplate.query(
+                eq("SELECT * FROM icecek WHERE id = ?"),
+                ArgumentMatchers.<RowMapper<Icecek>>any(),
+                eq(id)
+        )).thenReturn(List.of());
 
-        Icecek result = icecekService.getIcecekById(2);
+        Icecek result = icecekService.getIcecekById(id);
 
-        assertEquals(expected, result);
-        verify(jdbcTemplate, times(1)).queryForObject(eq("SELECT * FROM icecek WHERE id = ?"), any(RowMapper.class), eq(2));
+        assertNull(result);
+        verify(jdbcTemplate, times(1)).query(
+                eq("SELECT * FROM icecek WHERE id = ?"),
+                ArgumentMatchers.<RowMapper<Icecek>>any(),
+                eq(id)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void updateIcecek_rowsPositive_shouldReturnSuccessMessage() {
-        Icecek icecek = new Icecek.IcecekBuilder().setId(999).setName("Fanta").setMenuId(7).build();
+    void updateIcecek_shouldExecuteUpdateAndReturnSuccess_whenRowsPositive() {
+        int id = 7;
+        Icecek icecek = new Icecek.IcecekBuilder()
+                .setId(id)
+                .setName("Fanta")
+                .setMenuId(1)
+                .build();
 
         when(jdbcTemplate.update(
                 eq("UPDATE icecek SET name = ?, menu_id = ? WHERE id = ?"),
-                eq("Fanta"), eq(7), eq(10)
+                eq("Fanta"), eq(1), eq(id)
         )).thenReturn(1);
 
-        String result = icecekService.updateIcecek(10, icecek);
+        String msg = icecekService.updateIcecek(id, icecek);
 
-        assertEquals("İçecek başarıyla güncellendi.", result);
-        verify(jdbcTemplate, times(1)).update(eq("UPDATE icecek SET name = ?, menu_id = ? WHERE id = ?"), eq("Fanta"), eq(7), eq(10));
+        assertEquals("İçecek başarıyla güncellendi.", msg);
+        verify(jdbcTemplate, times(1)).update(
+                eq("UPDATE icecek SET name = ?, menu_id = ? WHERE id = ?"),
+                eq("Fanta"), eq(1), eq(id)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void deleteIcecek_rowsPositive_shouldReturnSuccessMessage() {
-        when(jdbcTemplate.update(eq("DELETE FROM icecek WHERE id = ?"), eq(3))).thenReturn(1);
+    void deleteIcecek_shouldExecuteDeleteAndReturnSuccess_whenRowsPositive() {
+        int id = 4;
 
-        String result = icecekService.deleteIcecek(3);
+        when(jdbcTemplate.update(
+                eq("DELETE FROM icecek WHERE id = ?"),
+                eq(id)
+        )).thenReturn(1);
 
-        assertEquals("İçecek başarıyla silindi!", result);
-        verify(jdbcTemplate, times(1)).update(eq("DELETE FROM icecek WHERE id = ?"), eq(3));
+        String msg = icecekService.deleteIcecek(id);
+
+        assertEquals("İçecek başarıyla silindi!", msg);
+        verify(jdbcTemplate, times(1)).update(
+                eq("DELETE FROM icecek WHERE id = ?"),
+                eq(id)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 }

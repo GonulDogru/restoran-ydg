@@ -3,6 +3,7 @@ package com.restoran.repository;
 import com.restoran.model.Tatli;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,69 +25,112 @@ class TatliServiceUnitTest {
     private TatliService tatliService;
 
     @Test
-    void createTatli_rowsPositive_shouldReturnSuccessMessage() {
-        Tatli tatli = new Tatli.TatliBuilder().setId(0).setName("Baklava").setMenuId(2).build();
+    void createTatli_shouldInsertAndReturnSuccessMessage_whenRowsPositive() {
+        Tatli tatli = new Tatli.TatliBuilder()
+                .setId(0)
+                .setName("Sütlaç")
+                .setMenuId(2)
+                .build();
 
-        when(jdbcTemplate.update(eq("INSERT INTO tatli (name, menu_id) VALUES (?, ?)"), eq("Baklava"), eq(2)))
-                .thenReturn(1);
+        when(jdbcTemplate.update(
+                eq("INSERT INTO tatli (name, menu_id) VALUES (?, ?)"),
+                eq("Sütlaç"), eq(2)
+        )).thenReturn(1);
 
-        String result = tatliService.createTatli(tatli);
+        String msg = tatliService.createTatli(tatli);
 
-        assertEquals("Tatlı başarıyla eklendi.", result);
-        verify(jdbcTemplate, times(1)).update(eq("INSERT INTO tatli (name, menu_id) VALUES (?, ?)"), eq("Baklava"), eq(2));
+        assertEquals("Tatlı başarıyla eklendi.", msg);
+        verify(jdbcTemplate, times(1)).update(
+                eq("INSERT INTO tatli (name, menu_id) VALUES (?, ?)"),
+                eq("Sütlaç"), eq(2)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void getAllTatlilar_shouldQueryAll() {
-        when(jdbcTemplate.query(eq("SELECT * FROM tatli"), any(RowMapper.class)))
-                .thenReturn(List.of());
+    void getAllTatlilar_shouldQueryTable() {
+        when(jdbcTemplate.query(
+                eq("SELECT * FROM tatli"),
+                ArgumentMatchers.<RowMapper<Tatli>>any()
+        )).thenReturn(List.of());
 
-        List<Tatli> result = tatliService.getAllTatlilar();
+        List<Tatli> list = tatliService.getAllTatlilar();
 
-        assertNotNull(result);
-        verify(jdbcTemplate, times(1)).query(eq("SELECT * FROM tatli"), any(RowMapper.class));
+        assertNotNull(list);
+        verify(jdbcTemplate, times(1)).query(
+                eq("SELECT * FROM tatli"),
+                ArgumentMatchers.<RowMapper<Tatli>>any()
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void getTatliById_shouldQueryById() {
-        Tatli expected = new Tatli.TatliBuilder().setId(1).setName("Sütlaç").setMenuId(3).build();
+    void getTatliById_shouldReturnFirstElement_whenFound() {
+        int id = 5;
+        Tatli expected = new Tatli.TatliBuilder()
+                .setId(id)
+                .setName("Baklava")
+                .setMenuId(3)
+                .build();
 
-        when(jdbcTemplate.queryForObject(eq("SELECT * FROM tatli WHERE id = ?"), any(RowMapper.class), eq(1)))
-                .thenReturn(expected);
+        // DİKKAT: Service query(...) kullanıyor.
+        when(jdbcTemplate.query(
+                eq("SELECT * FROM tatli WHERE id = ?"),
+                ArgumentMatchers.<RowMapper<Tatli>>any(),
+                eq(id)
+        )).thenReturn(List.of(expected));
 
-        Tatli result = tatliService.getTatliById(1);
+        Tatli result = tatliService.getTatliById(id);
 
-        assertEquals(expected, result);
-        verify(jdbcTemplate, times(1)).queryForObject(eq("SELECT * FROM tatli WHERE id = ?"), any(RowMapper.class), eq(1));
+        assertSame(expected, result);
+        verify(jdbcTemplate, times(1)).query(
+                eq("SELECT * FROM tatli WHERE id = ?"),
+                ArgumentMatchers.<RowMapper<Tatli>>any(),
+                eq(id)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void updateTatli_rowsPositive_shouldReturnSuccessMessage() {
-        Tatli tatli = new Tatli.TatliBuilder().setId(999).setName("Künefe").setMenuId(7).build();
+    void updateTatli_shouldExecuteUpdateAndReturnSuccess_whenRowsPositive() {
+        int id = 7;
+        Tatli tatli = new Tatli.TatliBuilder()
+                .setId(id)
+                .setName("Künefe")
+                .setMenuId(1)
+                .build();
 
         when(jdbcTemplate.update(
                 eq("UPDATE tatli SET name = ?, menu_id = ? WHERE id = ?"),
-                eq("Künefe"), eq(7), eq(10)
+                eq("Künefe"), eq(1), eq(id)
         )).thenReturn(1);
 
-        String result = tatliService.updateTatli(10, tatli);
+        String msg = tatliService.updateTatli(id, tatli);
 
-        assertEquals("Tatlı başarıyla güncellendi.", result);
-        verify(jdbcTemplate, times(1)).update(eq("UPDATE tatli SET name = ?, menu_id = ? WHERE id = ?"), eq("Künefe"), eq(7), eq(10));
+        assertEquals("Tatlı başarıyla güncellendi.", msg);
+        verify(jdbcTemplate, times(1)).update(
+                eq("UPDATE tatli SET name = ?, menu_id = ? WHERE id = ?"),
+                eq("Künefe"), eq(1), eq(id)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 
     @Test
-    void deleteTatli_rowsPositive_shouldReturnSuccessMessage() {
-        when(jdbcTemplate.update(eq("DELETE FROM tatli WHERE id = ?"), eq(3))).thenReturn(1);
+    void deleteTatli_shouldExecuteDeleteAndReturnSuccess_whenRowsPositive() {
+        int id = 4;
 
-        String result = tatliService.deleteTatli(3);
+        when(jdbcTemplate.update(
+                eq("DELETE FROM tatli WHERE id = ?"),
+                eq(id)
+        )).thenReturn(1);
 
-        assertEquals("Tatlı başarıyla silindi!", result);
-        verify(jdbcTemplate, times(1)).update(eq("DELETE FROM tatli WHERE id = ?"), eq(3));
+        String msg = tatliService.deleteTatli(id);
+
+        assertEquals("Tatlı başarıyla silindi!", msg);
+        verify(jdbcTemplate, times(1)).update(
+                eq("DELETE FROM tatli WHERE id = ?"),
+                eq(id)
+        );
         verifyNoMoreInteractions(jdbcTemplate);
     }
 }
