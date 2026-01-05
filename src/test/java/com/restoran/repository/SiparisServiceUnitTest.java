@@ -76,31 +76,29 @@ class SiparisServiceUnitTest {
 
         assertEquals("Sipariş eklenemedi.", result);
     }
+
     @Test
-    void createSiparis_whenInvalidDate_shouldNotCrash_andReturnFailureMessage() {
+    void createSiparis_whenInvalidDate_shouldThrowIllegalArgumentException_andNotCallDb() {
         Siparis siparis = new Siparis.SiparisBuilder()
                 .setId(0)
-                .setTarih("01-01-2026") // service bunu exception'a çevirmiyor
+                .setTarih("01-01-2026") // yanlış format (uuuu-MM-dd olmalı)
                 .setAmount(10.0f)
                 .setUserId(1)
                 .setMasaId(2)
                 .build();
 
-        String sql = "INSERT INTO siparis (tarih, amount, user_id, masa_id) VALUES (?, ?, ?, ?)";
-        when(jdbcTemplate.update(eq(sql),
-                any(),              // tarih tipi Date/LocalDate olabilir, burada esnek bırakıyoruz
-                eq(10.0f),
-                eq(1),
-                eq(2)
-        )).thenReturn(0);
+        // parseDate aşamasında patlaması beklenir
+        assertThrows(IllegalArgumentException.class, () -> siparisService.createSiparis(siparis));
 
-        String result = siparisService.createSiparis(siparis);
-
-        // invalid tarih geldiğinde servis crash olmuyor; eklenemedi senaryosu dönebilir
-        assertEquals("Sipariş eklenemedi.", result);
-        verify(jdbcTemplate, times(1)).update(eq(sql), any(), eq(10.0f), eq(1), eq(2));
+        // parse başarısız olduğu için DB'ye hiç gitmemeli
+        verify(jdbcTemplate, never()).update(
+                anyString(),
+                any(),
+                anyFloat(),
+                anyInt(),
+                anyInt()
+        );
     }
-
 
     @Test
     void getAllSiparisler_shouldQueryTable() {
