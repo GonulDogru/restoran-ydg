@@ -3,7 +3,7 @@ pipeline {
 
     options {
         timestamps()
-        disableConcurrentBuilds()   // Aynı anda 2 build çalışmasın (4444/port çakışmalarını azaltır)
+        disableConcurrentBuilds()
     }
 
     environment {
@@ -17,10 +17,7 @@ pipeline {
     stages {
 
         stage('0) Workspace Temizle') {
-            steps {
-                // Eski surefire xml'leri kalmasın; aynı testin Unit/Integration/Selenium altında tekrar görünmesini engeller
-                deleteDir()
-            }
+            steps { deleteDir() }
         }
 
         stage('1) Checkout') {
@@ -29,7 +26,7 @@ pipeline {
 
         stage('2) Build (skip tests)') {
             steps {
-                // Burada test koşmaması önemli
+                // Build aşamasında test istemiyoruz
                 sh 'mvn -q -DskipTests=true package'
             }
         }
@@ -37,24 +34,26 @@ pipeline {
         stage('3) Unit Tests') {
             steps {
                 sh 'rm -rf target/surefire-reports-unit || true'
-                sh 'mvn -q -Dtest=*UnitTest -Dsurefire.reportsDirectory=target/surefire-reports-unit test'
+                // Eğer POM'da skipUnitTests property varsa bunu kapatıyoruz:
+                sh 'mvn -q -DskipUnitTests=false -Dtest=*UnitTest -Dsurefire.reportsDirectory=target/surefire-reports-unit test'
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: 'target/surefire-reports-unit/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports-unit/*.xml'
                 }
             }
         }
 
-        stage('4) Integration Tests') {
+        stage('4) Integration Tests (failsafe)') {
             steps {
-                // Not: Siz şu an IT'leri surefire ile koşturuyorsunuz. En azından rapor klasörünü ayırıyoruz.
-                sh 'rm -rf target/surefire-reports-it || true'
-                sh 'mvn -q -Dtest=*IT -Dsurefire.reportsDirectory=target/surefire-reports-it test'
+                // Failsafe ile doğru yöntem: verify
+                // IT testleri için genelde *IT isimlendirme kullanılır
+                sh 'rm -rf target/failsafe-reports || true'
+                sh 'mvn -q -DskipUnitTests=true verify'
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: 'target/surefire-reports-it/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/*.xml'
                 }
             }
         }
@@ -68,11 +67,9 @@ pipeline {
 
         stage('5.1) Wait App Ready') {
             steps {
-                // Uygulama hazır olmadan Selenium başlarsa NoSuchElement gibi hatalar sık çıkar.
                 sh '''
                     set -e
                     echo "Waiting for app readiness at: ${APP_BASE_URL}"
-
                     for i in $(seq 1 60); do
                       if curl -fsS "${APP_BASE_URL}/" >/dev/null 2>&1; then
                         echo "App is ready."
@@ -80,7 +77,6 @@ pipeline {
                       fi
                       sleep 2
                     done
-
                     echo "App did not become ready in time."
                     docker compose ps || true
                     docker compose logs --no-color --tail=200 || true
@@ -96,7 +92,7 @@ pipeline {
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: 'target/surefire-reports-selenium-create/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports-selenium-create/*.xml'
                 }
             }
         }
@@ -108,7 +104,7 @@ pipeline {
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: 'target/surefire-reports-selenium-update/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports-selenium-update/*.xml'
                 }
             }
         }
@@ -120,7 +116,7 @@ pipeline {
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: 'target/surefire-reports-selenium-delete/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports-selenium-delete/*.xml'
                 }
             }
         }
