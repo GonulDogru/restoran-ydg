@@ -31,22 +31,17 @@ pipeline {
 
         stage('2) Build (skip tests)') {
             steps {
-                // Not: Sizde surefire "skipUnitTests" gibi bir property ile kontrol ediliyor olabilir.
-                // Bu yüzden ikisini de veriyoruz; build aşamasında test kesin koşmasın.
                 sh 'mvn -DskipTests=true -DskipUnitTests=true package'
             }
         }
 
         stage('3) Unit Tests') {
             steps {
-                // Önce default surefire dizinini temizle (raporlar karışmasın)
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/surefire-reports-unit || true'
 
-                // Unit testleri çalıştır (raporlar default: target/surefire-reports)
                 sh 'mvn -DskipUnitTests=false test'
 
-                // Oluşan raporları unit klasörüne kopyala
                 sh '''
                     set -e
                     mkdir -p target/surefire-reports-unit
@@ -182,6 +177,192 @@ pipeline {
             post {
                 always {
                     junit testResults: '**/target/selenium-reports/delete/*.xml'
+                }
+            }
+        }
+
+        // ===========================
+        // NEW SELENIUM STAGES (6.4 - 6.10)
+        // ===========================
+
+        stage('6.4) Selenium - Scenario 4 (Users Create)') {
+            steps {
+                sh 'rm -rf target/surefire-reports || true'
+                sh 'rm -rf target/selenium-reports/users-create || true'
+
+                sh 'mvn -Pselenium -Dtest=UsersCreateScenarioTest test'
+
+                sh '''
+                    set -e
+                    mkdir -p target/selenium-reports/users-create
+                    echo "--- default surefire reports (selenium users create) ---"
+                    ls -la target/surefire-reports || true
+                    echo "--- copy selenium users create xml ---"
+                    cp -v target/surefire-reports/*.xml target/selenium-reports/users-create/ 2>/dev/null || true
+                    echo "--- selenium users create reports ---"
+                    ls -la target/selenium-reports/users-create || true
+                    find target/selenium-reports/users-create -maxdepth 1 -name "*.xml" -print || true
+                '''
+            }
+            post {
+                always {
+                    junit testResults: '**/target/selenium-reports/users-create/*.xml'
+                }
+            }
+        }
+
+        stage('6.5) Selenium - Scenario 5 (Restaurant Search)') {
+            steps {
+                sh 'rm -rf target/surefire-reports || true'
+                sh 'rm -rf target/selenium-reports/restaurant-search || true'
+
+                sh 'mvn -Pselenium -Dtest=RestaurantSearchScenarioTest test'
+
+                sh '''
+                    set -e
+                    mkdir -p target/selenium-reports/restaurant-search
+                    echo "--- default surefire reports (selenium restaurant search) ---"
+                    ls -la target/surefire-reports || true
+                    echo "--- copy selenium restaurant search xml ---"
+                    cp -v target/surefire-reports/*.xml target/selenium-reports/restaurant-search/ 2>/dev/null || true
+                    echo "--- selenium restaurant search reports ---"
+                    ls -la target/selenium-reports/restaurant-search || true
+                    find target/selenium-reports/restaurant-search -maxdepth 1 -name "*.xml" -print || true
+                '''
+            }
+            post {
+                always {
+                    junit testResults: '**/target/selenium-reports/restaurant-search/*.xml'
+                }
+            }
+        }
+
+        stage('6.6) Selenium - Scenario 6 (Menu Create)') {
+            steps {
+                sh 'rm -rf target/surefire-reports || true'
+                sh 'rm -rf target/selenium-reports/menu-create || true'
+
+                sh 'mvn -Pselenium -Dtest=MenuCreateScenarioTest test'
+
+                sh '''
+                    set -e
+                    mkdir -p target/selenium-reports/menu-create
+                    echo "--- default surefire reports (selenium menu create) ---"
+                    ls -la target/surefire-reports || true
+                    echo "--- copy selenium menu create xml ---"
+                    cp -v target/surefire-reports/*.xml target/selenium-reports/menu-create/ 2>/dev/null || true
+                    echo "--- selenium menu create reports ---"
+                    ls -la target/selenium-reports/menu-create || true
+                    find target/selenium-reports/menu-create -maxdepth 1 -name "*.xml" -print || true
+                '''
+            }
+            post {
+                always {
+                    junit testResults: '**/target/selenium-reports/menu-create/*.xml'
+                }
+            }
+        }
+
+        stage('6.7) Selenium - Scenario 7 (Masa Create)') {
+            steps {
+                sh 'rm -rf target/surefire-reports || true'
+                sh 'rm -rf target/selenium-reports/masa-create || true'
+
+                sh 'mvn -Pselenium -Dtest=MasaCreateScenarioTest test'
+
+                sh '''
+                    set -e
+                    mkdir -p target/selenium-reports/masa-create
+                    echo "--- default surefire reports (selenium masa create) ---"
+                    ls -la target/surefire-reports || true
+                    echo "--- copy selenium masa create xml ---"
+                    cp -v target/surefire-reports/*.xml target/selenium-reports/masa-create/ 2>/dev/null || true
+                    echo "--- selenium masa create reports ---"
+                    ls -la target/selenium-reports/masa-create || true
+                    find target/selenium-reports/masa-create -maxdepth 1 -name "*.xml" -print || true
+                '''
+            }
+            post {
+                always {
+                    junit testResults: '**/target/selenium-reports/masa-create/*.xml'
+                }
+            }
+        }
+
+        stage('6.8) Selenium - Scenario 8 (Odeme Create)') {
+            steps {
+                sh 'rm -rf target/surefire-reports || true'
+                sh 'rm -rf target/selenium-reports/odeme-create || true'
+
+                sh 'mvn -Pselenium -Dtest=OdemeCreateScenarioTest test'
+
+                sh '''
+                    set -e
+                    mkdir -p target/selenium-reports/odeme-create
+                    echo "--- default surefire reports (selenium odeme create) ---"
+                    ls -la target/surefire-reports || true
+                    echo "--- copy selenium odeme create xml ---"
+                    cp -v target/surefire-reports/*.xml target/selenium-reports/odeme-create/ 2>/dev/null || true
+                    echo "--- selenium odeme create reports ---"
+                    ls -la target/selenium-reports/odeme-create || true
+                    find target/selenium-reports/odeme-create -maxdepth 1 -name "*.xml" -print || true
+                '''
+            }
+            post {
+                always {
+                    junit testResults: '**/target/selenium-reports/odeme-create/*.xml'
+                }
+            }
+        }
+
+        stage('6.9) Selenium - Scenario 9 (Yemek Create)') {
+            steps {
+                sh 'rm -rf target/surefire-reports || true'
+                sh 'rm -rf target/selenium-reports/yemek-create || true'
+
+                sh 'mvn -Pselenium -Dtest=YemekCreateScenarioTest test'
+
+                sh '''
+                    set -e
+                    mkdir -p target/selenium-reports/yemek-create
+                    echo "--- default surefire reports (selenium yemek create) ---"
+                    ls -la target/surefire-reports || true
+                    echo "--- copy selenium yemek create xml ---"
+                    cp -v target/surefire-reports/*.xml target/selenium-reports/yemek-create/ 2>/dev/null || true
+                    echo "--- selenium yemek create reports ---"
+                    ls -la target/selenium-reports/yemek-create || true
+                    find target/selenium-reports/yemek-create -maxdepth 1 -name "*.xml" -print || true
+                '''
+            }
+            post {
+                always {
+                    junit testResults: '**/target/selenium-reports/yemek-create/*.xml'
+                }
+            }
+        }
+
+        stage('6.10) Selenium - Scenario 10 (Icecek Create)') {
+            steps {
+                sh 'rm -rf target/surefire-reports || true'
+                sh 'rm -rf target/selenium-reports/icecek-create || true'
+
+                sh 'mvn -Pselenium -Dtest=IcecekCreateScenarioTest test'
+
+                sh '''
+                    set -e
+                    mkdir -p target/selenium-reports/icecek-create
+                    echo "--- default surefire reports (selenium icecek create) ---"
+                    ls -la target/surefire-reports || true
+                    echo "--- copy selenium icecek create xml ---"
+                    cp -v target/surefire-reports/*.xml target/selenium-reports/icecek-create/ 2>/dev/null || true
+                    echo "--- selenium icecek create reports ---"
+                    ls -la target/selenium-reports/icecek-create || true
+                    find target/selenium-reports/icecek-create -maxdepth 1 -name "*.xml" -print || true
+                '''
+            }
+            post {
+                always {
+                    junit testResults: '**/target/selenium-reports/icecek-create/*.xml'
                 }
             }
         }

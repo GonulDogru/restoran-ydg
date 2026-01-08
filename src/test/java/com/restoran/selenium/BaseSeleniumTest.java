@@ -2,9 +2,13 @@ package com.restoran.selenium;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 import java.time.Duration;
@@ -18,6 +22,73 @@ public abstract class BaseSeleniumTest {
         return (env == null || env.isBlank()) ? "http://localhost:8091" : env;
     }
 
+    protected WebDriverWait wait15() {
+        return new WebDriverWait(driver, Duration.ofSeconds(15));
+    }
+
+    /**
+     * UI uzerinden restoran olusturur ve listeden ID bilgisini geri dondurur.
+     */
+    protected long createRestaurant(String name) {
+        driver.get(baseUrl() + "/restaurant/new");
+
+        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("name"))).sendKeys(name);
+        driver.findElement(By.id("address")).sendKeys("Selenium Address");
+        driver.findElement(By.cssSelector("button[type='submit']")).click();
+
+        driver.get(baseUrl() + "/restaurant/list");
+        By rowBy = By.xpath("//tr[td[contains(normalize-space(.), '" + name + "')]]");
+        WebElement row = wait15().until(ExpectedConditions.presenceOfElementLocated(rowBy));
+        String idText = row.findElement(By.xpath("./td[1]")).getText().trim();
+        return Long.parseLong(idText);
+    }
+
+    /**
+     * UI uzerinden menu olusturur ve listeden ID bilgisini geri dondurur.
+     */
+    protected long createMenu(String name, long restaurantId) {
+        driver.get(baseUrl() + "/menu/new");
+
+        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("name"))).sendKeys(name);
+        driver.findElement(By.id("restaurantId")).sendKeys(String.valueOf(restaurantId));
+        driver.findElement(By.cssSelector("button[type='submit']")).click();
+
+        driver.get(baseUrl() + "/menu/list");
+        By rowBy = By.xpath("//tr[td[contains(normalize-space(.), '" + name + "')]]");
+        WebElement row = wait15().until(ExpectedConditions.presenceOfElementLocated(rowBy));
+        String idText = row.findElement(By.xpath("./td[1]")).getText().trim();
+        return Long.parseLong(idText);
+    }
+
+    /**
+     * UI uzerinden masa olusturur ve listeden ID bilgisini geri dondurur.
+     */
+    protected long createMasa(String name, long restaurantId) {
+        driver.get(baseUrl() + "/masa/new");
+
+        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("name"))).sendKeys(name);
+        driver.findElement(By.id("restaurantId")).sendKeys(String.valueOf(restaurantId));
+        driver.findElement(By.cssSelector("button[type='submit']")).click();
+
+        driver.get(baseUrl() + "/masa/list");
+        By rowBy = By.xpath("//tr[td[contains(normalize-space(.), '" + name + "')]]");
+        WebElement row = wait15().until(ExpectedConditions.presenceOfElementLocated(rowBy));
+        String idText = row.findElement(By.xpath("./td[1]")).getText().trim();
+        return Long.parseLong(idText);
+    }
+
+    /**
+     * UI uzerinden user olusturur.
+     */
+    protected void createUser(String name, String email, String password) {
+        driver.get(baseUrl() + "/users/new");
+
+        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("name"))).sendKeys(name);
+        driver.findElement(By.id("email")).sendKeys(email);
+        driver.findElement(By.id("password")).sendKeys(password);
+        driver.findElement(By.cssSelector("button[type='submit']")).click();
+    }
+
     @BeforeEach
     void setUpDriver() throws Exception {
         String remoteUrl = System.getenv("SELENIUM_REMOTE_URL");
@@ -29,18 +100,15 @@ public abstract class BaseSeleniumTest {
         options.addArguments("--window-size=1400,900");
 
         if (remoteUrl == null || remoteUrl.isBlank()) {
-            throw new IllegalStateException(
-                    "SELENIUM_REMOTE_URL tanimli degil. " +
-                    "Jenkins/Docker'da selenium/standalone-chrome ile RemoteWebDriver kullanilacak sekilde tasarlandi."
-            );
+            remoteUrl = "http://localhost:4444/wd/hub";
         }
 
         driver = new RemoteWebDriver(new URL(remoteUrl), options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDownDriver() {
         if (driver != null) {
             driver.quit();
         }
