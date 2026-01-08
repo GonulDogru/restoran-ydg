@@ -18,8 +18,10 @@ public class OdemeCreateScenarioTest extends BaseSeleniumTest {
 
         driver.get(baseUrl() + "/odeme/new");
 
-        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("amount"))).sendKeys("100");
+        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("tutar"))).sendKeys("100");
         driver.findElement(By.id("masaId")).sendKeys(String.valueOf(masaId));
+        driver.findElement(By.id("odemeYontemi")).sendKeys("Nakit");
+        
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
         driver.get(baseUrl() + "/odeme/list");

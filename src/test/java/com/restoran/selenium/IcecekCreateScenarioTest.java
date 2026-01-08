@@ -20,7 +20,7 @@ public class IcecekCreateScenarioTest extends BaseSeleniumTest {
 
         driver.get(baseUrl() + "/icecek/new");
         wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("name"))).sendKeys(icecekName);
-        driver.findElement(By.id("price")).sendKeys("25");
+        // Fiyat alanı HTML'de olmadığı için kaldırıldı
         driver.findElement(By.id("menuId")).sendKeys(String.valueOf(menuId));
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 

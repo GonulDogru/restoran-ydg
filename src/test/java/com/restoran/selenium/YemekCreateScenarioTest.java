@@ -20,7 +20,7 @@ public class YemekCreateScenarioTest extends BaseSeleniumTest {
 
         driver.get(baseUrl() + "/yemek/new");
         wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("name"))).sendKeys(yemekName);
-        driver.findElement(By.id("price")).sendKeys("50");
+
         driver.findElement(By.id("menuId")).sendKeys(String.valueOf(menuId));
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 

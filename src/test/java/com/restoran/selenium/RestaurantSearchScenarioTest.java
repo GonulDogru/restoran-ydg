@@ -20,7 +20,8 @@ public class RestaurantSearchScenarioTest extends BaseSeleniumTest {
         // listeye git ve arama yap
         driver.get(baseUrl() + "/restaurant/list");
 
-        WebElement search = wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("search")));
+        WebElement search = wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("restaurantSearch")
+        ));
         search.clear();
         search.sendKeys(unique);
 

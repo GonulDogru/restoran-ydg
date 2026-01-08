@@ -66,12 +66,18 @@ public abstract class BaseSeleniumTest {
     protected long createMasa(String name, long restaurantId) {
         driver.get(baseUrl() + "/masa/new");
 
-        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("name"))).sendKeys(name);
+        // Masa numarası sayısal olmalı, name parametresi string gelse de sayısal bir değere çeviriyoruz veya direkt kullanıyoruz
+        // Ancak testlerde genellikle "Masa_..." gibi string gönderiliyor, bunu sayıya çevirmek gerekebilir.
+        // Basitlik adına, name parametresini sayısal bir string olarak varsayacağız veya hashcode kullanacağız.
+        String masaNumara = String.valueOf(Math.abs(name.hashCode()) % 1000);
+
+        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("numara"))).sendKeys(masaNumara);
+        driver.findElement(By.id("kapasite")).sendKeys("4");
         driver.findElement(By.id("restaurantId")).sendKeys(String.valueOf(restaurantId));
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
         driver.get(baseUrl() + "/masa/list");
-        By rowBy = By.xpath("//tr[td[contains(normalize-space(.), '" + name + "')]]");
+        By rowBy = By.xpath("//tr[td[contains(normalize-space(.), '" + masaNumara + "')]]");
         WebElement row = wait15().until(ExpectedConditions.presenceOfElementLocated(rowBy));
         String idText = row.findElement(By.xpath("./td[1]")).getText().trim();
         return Long.parseLong(idText);
@@ -80,12 +86,13 @@ public abstract class BaseSeleniumTest {
     /**
      * UI uzerinden user olusturur.
      */
-    protected void createUser(String name, String email, String password) {
+    protected void createUser(String username, String password) {
         driver.get(baseUrl() + "/users/new");
 
-        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("name"))).sendKeys(name);
-        driver.findElement(By.id("email")).sendKeys(email);
+        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("username"))).sendKeys(username);
         driver.findElement(By.id("password")).sendKeys(password);
+        driver.findElement(By.id("adres")).sendKeys("Selenium Adres");
+        driver.findElement(By.id("telefon")).sendKeys("5551234567");
         driver.findElement(By.cssSelector("button[type='submit']")).click();
     }
 
