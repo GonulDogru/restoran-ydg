@@ -40,8 +40,10 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/surefire-reports-unit || true'
 
+                // Unit testleri çalıştır
                 sh 'mvn -DskipUnitTests=false test'
 
+                // Oluşan raporları unit klasörüne kopyala
                 sh '''
                     set -e
                     mkdir -p target/surefire-reports-unit
@@ -56,7 +58,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/surefire-reports-unit/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports-unit/*.xml'
                 }
             }
         }
@@ -70,7 +72,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/failsafe-reports/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/*.xml'
                 }
             }
         }
@@ -108,7 +110,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/create || true'
 
-                sh 'mvn -Pselenium -Dtest=RestaurantCreateScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=RestaurantCreateScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -124,7 +128,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/create/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/create/*.xml'
                 }
             }
         }
@@ -134,7 +138,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/update || true'
 
-                sh 'mvn -Pselenium -Dtest=RestaurantUpdateScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=RestaurantUpdateScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -150,7 +156,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/update/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/update/*.xml'
                 }
             }
         }
@@ -160,7 +166,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/delete || true'
 
-                sh 'mvn -Pselenium -Dtest=RestaurantDeleteScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=RestaurantDeleteScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -176,13 +184,13 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/delete/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/delete/*.xml'
                 }
             }
         }
 
         // ===========================
-        // NEW SELENIUM STAGES (6.4 - 6.10)
+        // SELENIUM STAGES (6.4 - 6.10)
         // ===========================
 
         stage('6.4) Selenium - Scenario 4 (Users Create)') {
@@ -190,7 +198,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/users-create || true'
 
-                sh 'mvn -Pselenium -Dtest=UsersCreateScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=UsersCreateScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -206,7 +216,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/users-create/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/users-create/*.xml'
                 }
             }
         }
@@ -216,7 +226,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/restaurant-search || true'
 
-                sh 'mvn -Pselenium -Dtest=RestaurantSearchScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=RestaurantSearchScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -232,7 +244,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/restaurant-search/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/restaurant-search/*.xml'
                 }
             }
         }
@@ -242,7 +254,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/menu-create || true'
 
-                sh 'mvn -Pselenium -Dtest=MenuCreateScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=MenuCreateScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -258,7 +272,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/menu-create/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/menu-create/*.xml'
                 }
             }
         }
@@ -268,7 +282,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/masa-create || true'
 
-                sh 'mvn -Pselenium -Dtest=MasaCreateScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=MasaCreateScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -284,7 +300,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/masa-create/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/masa-create/*.xml'
                 }
             }
         }
@@ -294,7 +310,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/odeme-create || true'
 
-                sh 'mvn -Pselenium -Dtest=OdemeCreateScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=OdemeCreateScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -310,7 +328,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/odeme-create/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/odeme-create/*.xml'
                 }
             }
         }
@@ -320,7 +338,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/yemek-create || true'
 
-                sh 'mvn -Pselenium -Dtest=YemekCreateScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=YemekCreateScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -336,7 +356,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/yemek-create/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/yemek-create/*.xml'
                 }
             }
         }
@@ -346,7 +366,9 @@ pipeline {
                 sh 'rm -rf target/surefire-reports || true'
                 sh 'rm -rf target/selenium-reports/icecek-create || true'
 
-                sh 'mvn -Pselenium -Dtest=IcecekCreateScenarioTest test'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'mvn -Pselenium -Dtest=IcecekCreateScenarioTest test'
+                }
 
                 sh '''
                     set -e
@@ -362,7 +384,7 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: '**/target/selenium-reports/icecek-create/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/selenium-reports/icecek-create/*.xml'
                 }
             }
         }

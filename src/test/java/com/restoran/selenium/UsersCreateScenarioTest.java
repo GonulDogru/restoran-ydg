@@ -16,7 +16,8 @@ public class UsersCreateScenarioTest extends BaseSeleniumTest {
 
         driver.get(baseUrl() + "/users/new");
 
-        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("name"))).sendKeys(name);
+        wait15().until(ExpectedConditions.visibilityOfElementLocated(By.id("username")
+        )).sendKeys(name);
         driver.findElement(By.id("email")).sendKeys(email);
         driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.cssSelector("button[type='submit']")).click();
