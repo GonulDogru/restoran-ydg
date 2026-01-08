@@ -9,7 +9,7 @@ pipeline {
 
     environment {
         APP_BASE_URL = 'http://host.docker.internal:8091'
-        SELENIUM_REMOTE_URL = 'http://host.docker.internal:4444/wd/hub'
+        SELENIUM_REMOTE_URL = 'http://host.docker.internal:4445/wd/hub'
 
         TESTCONTAINERS_HOST_OVERRIDE = 'host.docker.internal'
         TESTCONTAINERS_RYUK_DISABLED = 'true'
